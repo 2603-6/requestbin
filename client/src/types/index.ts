@@ -24,3 +24,11 @@ export interface BinRequest {
   path: string;
   query: string; 
 }
+
+export interface INavbarProps  {
+  binId?: number;
+  listening: boolean;
+  toggleListening: () => void;
+  onClearBin: () => void;
+  onDeleteBin: () => void;
+}
