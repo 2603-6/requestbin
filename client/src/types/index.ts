@@ -13,3 +13,14 @@ export interface IBinProps {
   binId: number;
   capacity?: number
 }
+
+export interface BinRequest {
+  id: string;
+  date: number;
+  headers: string
+  contentLength: number;
+  body: string;
+  method: RequestType;
+  path: string;
+  query: string; 
+}
