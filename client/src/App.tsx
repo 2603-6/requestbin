@@ -3,12 +3,13 @@ import type { BinInfo } from './types';
 import { useBinService } from './contexts/binServiceContext.ts';
 import { useEffect, useState } from 'react';
 import { BinContext } from './contexts/binContext.ts';
-
+import Navbar from './components/Navbar.tsx';
 
 
 function App() {
   const [bins, setBins] = useState<BinInfo[]>([]);
   const [selectedBin, setSelectedBin] = useState<BinInfo | null>(null);
+  const [listening, setListening] = useState<boolean>(true);
   const binService = useBinService();
 
   useEffect(() => {
@@ -32,6 +33,13 @@ function App() {
   return (
     <>
       <BinContext value={selectedBin}>
+        <Navbar
+          binId={binId}
+          toggleListening={toggleListening}
+          listening={listening}
+          onClearBin={clearBin}
+          onDeleteBin={deleteBin}
+        />
         {bins.map((bin) => (
           <button
             key={bin.binId}
