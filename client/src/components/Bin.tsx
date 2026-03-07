@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import binService from '../services/binService';
 import type { FC } from 'react';
-import type { IBinProps } from '../types';
-import type { BinRequest } from '../types';
+import type { IBinProps, BinRequest } from '../types';
 
 const Bin: FC<IBinProps> = ({ binId, capacity }) => {
   const [requests, setRequests] = useState<BinRequest[]>([]);
@@ -19,19 +18,21 @@ const Bin: FC<IBinProps> = ({ binId, capacity }) => {
 
   // add formatting to date to convert from epoch time to formatted date
   return (
-    <div>
+    <div className={'bin'}>
       <h1>Bin:{binId}</h1>
       <p>Requests are collected at SOME_URL/{binId}</p>
       {capacity ? <p>Capacity:{capacity}</p> : null }
-      {requests.map((request) => (
-        <div key={request.id}>
-          <p>{request.method}</p>
-          <p>{request.path} and query params here</p>
-          <p>{request.date}</p>
-          <p>Headers - add click event to expand</p>
-          <p>Body - add click event to expand, don't show if empty</p>
-        </div>
-      ))}
+      <div className={'requests'}>
+        {requests.map((request) => (
+          <div key={request.id} className={'request-card'}>
+            <p>{request.method}</p>
+            <p>{request.path} and query params here</p>
+            <p>{request.date}</p>
+            <p>Headers - add click event to expand</p>
+            <p>Body - add click event to expand, don't show if empty</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
