@@ -1,0 +1,26 @@
+{
+  "requests": [
+    {
+      "date": 1772909997955,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "content-length": 13,
+      "body": "Hello, world!",
+      "method": "POST",
+      "path": "/test",
+      "query": ""
+    },
+    {
+      "date": 1772910240038,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "content-length": 15,
+      "body": "Goodbye, world!",
+      "method": "POST",
+      "path": "/test",
+      "query": ""
+    }
+  ]
+}
