@@ -6,7 +6,7 @@
       "headers": {
         "Content-Type": "application/json"
       },
-      "content-length": 13,
+      "contentLength": 13,
       "body": "Hello, world!",
       "method": "POST",
       "path": "/test",
@@ -18,7 +18,7 @@
       "headers": {
         "Content-Type": "application/json"
       },
-      "content-length": 15,
+      "contentLength": 15,
       "body": "Goodbye, world!",
       "method": "POST",
       "path": "/test",
