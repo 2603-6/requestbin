@@ -12,5 +12,4 @@ export interface IRequestProps {
 export interface IBinProps {
   binId: number;
   capacity?: number
-  requests: IRequestProps[];
 }
