@@ -1,28 +1,39 @@
 {
-  "requests": [
+  "bins": [
     {
-      "id": "123",
-      "date": 1772909997955,
-      "headers": {
-        "Content-Type": "application/json"
-      },
-      "contentLength": 13,
-      "body": "Hello, world!",
-      "method": "POST",
-      "path": "/test",
-      "query": ""
+      "bin_name": "bin2"
     },
     {
-      "id": "456",
-      "date": 1772910240038,
+      "bin_name": "testbin"
+    },
+    {
+      "bin_name": "github1"
+    }
+  ],
+  "requests": [
+    {
+      "id": 1,
+      "bin_name": "bin2",
+      "time_of_day": "10:15:30",
+      "date_stamp": "03:07:2026",
+      "http_method": "POST",
+      "body": "Hello, world!",
       "headers": {
         "Content-Type": "application/json"
       },
-      "contentLength": 15,
+      "path": "/test"
+    },
+    {
+      "id": 2,
+      "bin_name": "bin2",
+      "time_of_day": "11:45:00",
+      "date_stamp": "03:07:2026",
+      "http_method": "POST",
       "body": "Goodbye, world!",
-      "method": "POST",
-      "path": "/test",
-      "query": ""
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "path": "/test"
     }
   ]
 }
