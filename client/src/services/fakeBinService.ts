@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { BinInfo, BinRequest } from '../types';
+import type { BinInfo, BinProvider, BinRequest } from '../types';
 
 const BASE_URL = 'http://localhost:3001';
 
@@ -37,10 +37,12 @@ const deleteBin = async (binName: string) => {
 //   return await axios.delete(BASE_URL + '/requests', { data: { id: requestId } });
 // };
 
-export default {
+const fakeBinService: BinProvider = {
   fetchRequests,
   fetchBins,
   createBin,
   deleteBin,
   // deleteRequest,
 };
+
+export default fakeBinService;

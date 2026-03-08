@@ -28,3 +28,10 @@ export interface BinRequest {
 export type BinInfo = {
   bin_name: string;
 };
+
+export interface BinProvider {
+  fetchBins: () => Promise<BinInfo[]>;
+  createBin: (binName?: string) => Promise<BinInfo>;
+  deleteBin: (binName: string) => Promise<void>;
+  fetchRequests: (binName: string) => Promise<BinRequest[]>;
+}

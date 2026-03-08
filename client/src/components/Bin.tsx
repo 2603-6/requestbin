@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import binService from '../services/binService';
 import type { FC } from 'react';
 import type { IBinProps } from '../types';
 import type { BinRequest } from '../types';
+import { useBin } from '../contexts/binContext.tsx';
 
 const Bin: FC<IBinProps> = ({ binId, capacity }) => {
   const [requests, setRequests] = useState<BinRequest[]>([]);
-
+  const binService = useBin();
   
   useEffect(() => {
     const fetchRequests = async () => {
@@ -15,7 +15,7 @@ const Bin: FC<IBinProps> = ({ binId, capacity }) => {
     };
 
     void fetchRequests();
-  }, [binId]);
+  }, [binId, binService]);
 
   // add formatting to date to convert from epoch time to formatted date
   return (
