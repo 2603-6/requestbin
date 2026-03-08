@@ -25,7 +25,7 @@ db.requests.insertMany([
                 "User-Agent": "Mozilla/5.0"
             },
             body: { message: "hello world"},
-            query_params: { page: "1 "}, 
+            query_params: { page: "1"}, 
         }
     },
 ]);
