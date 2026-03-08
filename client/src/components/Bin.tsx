@@ -10,12 +10,12 @@ const Bin: FC<IBinProps> = ({ binId, capacity }) => {
   
   useEffect(() => {
     const fetchRequests = async () => {
-      const data = await binService.fetchRequests();
+      const data = await binService.fetchRequests(binId);
       setRequests(data);
     };
 
     void fetchRequests();
-  }, []);
+  }, [binId]);
 
   // add formatting to date to convert from epoch time to formatted date
   return (
@@ -25,9 +25,9 @@ const Bin: FC<IBinProps> = ({ binId, capacity }) => {
       {capacity ? <p>Capacity:{capacity}</p> : null }
       {requests.map((request) => (
         <div key={request.id}>
-          <p>{request.method}</p>
+          <p>{request.http_method}</p>
           <p>{request.path} and query params here</p>
-          <p>{request.date}</p>
+          <p>{request.date_stamp}</p>
           <p>Headers - add click event to expand</p>
           <p>Body - add click event to expand, don't show if empty</p>
         </div>
