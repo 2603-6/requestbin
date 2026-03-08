@@ -10,17 +10,21 @@ export interface IRequestProps {
 }
 
 export interface IBinProps {
-  binId: number;
+  binId: string;
   capacity?: number
 }
 
 export interface BinRequest {
-  id: string;
-  date: number;
-  headers: string
-  contentLength: number;
+  id: number;
+  bin_name: string;
+  time_of_day: string;
+  date_stamp: string;
+  http_method: RequestType;
   body: string;
-  method: RequestType;
+  headers: object;
   path: string;
-  query: string; 
 }
+
+export type BinInfo = {
+  bin_name: string;
+};
