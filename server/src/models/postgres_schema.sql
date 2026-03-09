@@ -12,11 +12,7 @@ CREATE TABLE requests (
     http_method text
 );
 
-<<<<<<< HEAD
 INSERT INTO bins (name) VALUES ('abcd123');
-=======
-INSERT INTO bins (name) VALUES ("abcd123");
->>>>>>> 24591b5 (added data to initialization database files)
 INSERT INTO requests (bin_id, mongodb_id, http_method)
 VALUES (
     (SELECT id from bins WHERE name = 'abcd123'),
