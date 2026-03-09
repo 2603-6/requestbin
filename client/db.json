@@ -18,9 +18,7 @@
       "date_stamp": "03:07:2026",
       "http_method": "POST",
       "body": "Hello, world!",
-      "headers": {
-        "Content-Type": "application/json"
-      },
+      "headers": "{'Content-Type': 'application/json'}",
       "path": "/test"
     },
     {
@@ -30,9 +28,7 @@
       "date_stamp": "03:07:2026",
       "http_method": "POST",
       "body": "Goodbye, world!",
-      "headers": {
-        "Content-Type": "application/json"
-      },
+      "headers": "{ 'Content-Type': 'application/json'}",
       "path": "/test"
     }
   ]

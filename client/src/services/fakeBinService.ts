@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { BinInfo, BinProvider, RawBin, RawRequest } from '../types';
+import type { BinInfo, BinProvider, RawBin, RawRequest, IRequestProps } from '../types';
 
 const BASE_URL = 'http://localhost:3001';
 const BINS_URL = BASE_URL + '/bins';
@@ -9,7 +9,7 @@ const fetchRequests = async (binName: string) => {
   console.log(`fetching requests for bin ${binName}`);
   // The real route is /api/bins/:name/requests
   const response = await axios.get<RawRequest[]>(REQUESTS_URL + `?bin_name=${binName}`);
-  return response.data;
+  return response.data.map(parseRawRequest);
 };
 
 
@@ -45,16 +45,27 @@ const deleteBin = async (binName: string) => {
 const clearBin = async (binName: string) => {
   const requests = await fetchRequests(binName);
   await Promise.all(
-    requests.map((request) => axios.delete(REQUESTS_URL + `/${request.id}`)),
+    requests.map((request) => axios.delete(REQUESTS_URL + `/${request.requestId}`)),
   );
 };
 
 
-export const parseRawBin = (raw: RawBin): BinInfo => {
+const parseRawBin = (raw: RawBin): BinInfo => {
   return {
     binId: raw.id,
   } as BinInfo;
 };
+
+const parseRawRequest = (raw: RawRequest): IRequestProps => {
+  return {
+    requestId: raw.id,
+    requestHeaders: raw.headers,
+    timestamp: `${raw.date_stamp} ${raw.time_of_day}`,
+    path: raw.path,
+    type: raw.http_method,
+  };
+};
+
 
 const fakeBinService: BinProvider = {
   fetchRequests,
