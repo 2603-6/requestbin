@@ -1,13 +1,13 @@
 {
   "bins": [
     {
-      "bin_name": "bin2"
+      "id": "bin2"
     },
     {
-      "bin_name": "testbin"
+      "id": "testbin"
     },
     {
-      "bin_name": "github1"
+      "id": "github1"
     }
   ],
   "requests": [

@@ -1,30 +1,48 @@
-import './App.css';
 import Bin from './components/Bin.tsx';
-import { useEffect, useState } from 'react';
 import type { BinInfo } from './types';
-import { useBin } from './contexts/binContext.tsx';
+import { useBinService } from './contexts/binServiceContext.ts';
+import { useEffect, useState } from 'react';
+import { BinContext } from './contexts/binContext.ts';
+
+
 
 function App() {
   const [bins, setBins] = useState<BinInfo[]>([]);
   const [selectedBin, setSelectedBin] = useState<BinInfo | null>(null);
-  const binService = useBin();
-  
+  const binService = useBinService();
+
   useEffect(() => {
     const fetchBins = async () => {
       const data = await binService.fetchBins();
       setBins(data);
     };
     void fetchBins();
-  });
+  }, [binService]);
 
-  
+  const toggleSelectedBin = (bin: BinInfo): void => {
+    if (isSelected(bin)) {
+      setSelectedBin(null);
+    } else {
+      setSelectedBin(bin);
+    }
+  };
+
+  const isSelected = (bin: BinInfo): boolean => bin.binId === selectedBin?.binId;
+
   return (
     <>
-
-      {bins.map((bin) => (
-        <button onClick={() => setSelectedBin(bin)} key={bin.bin_name}>{bin.bin_name}</button>
-      ))}
-      {selectedBin ? <Bin binId={selectedBin.bin_name} /> : null}
+      <BinContext value={selectedBin}>
+        {bins.map((bin) => (
+          <button
+            key={bin.binId}
+            onClick={() => toggleSelectedBin(bin)}
+            style={{ backgroundColor: isSelected(bin) ? 'green' : '' }}
+          >
+            {bin.binId}
+          </button>
+        ))}
+        {selectedBin ? <Bin /> : null}
+      </BinContext>
     </>
   );
 }

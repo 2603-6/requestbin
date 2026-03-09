@@ -2,14 +2,14 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App.tsx';
-import { BinContext } from './contexts/binContext.tsx';
+import { BinServiceContext } from './contexts/binServiceContext.ts';
 import fakeBinService from './services/fakeBinService.ts';
 
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BinContext value={fakeBinService}>
+    <BinServiceContext value={fakeBinService}>
       <App />
-    </BinContext>
+    </BinServiceContext>
   </StrictMode>,
 );

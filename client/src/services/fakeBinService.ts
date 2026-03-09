@@ -1,33 +1,38 @@
 import axios from 'axios';
-import type { BinInfo, BinProvider, BinRequest } from '../types';
+import type { BinInfo, BinProvider, RawBin, RawRequest } from '../types';
 
 const BASE_URL = 'http://localhost:3001';
+const BINS_URL = BASE_URL + '/bins';
+const REQUESTS_URL = BASE_URL + '/requests';
 
 const fetchRequests = async (binName: string) => {
   console.log(`fetching requests for bin ${binName}`);
   // The real route is /api/bins/:name/requests
-  const response = await axios.get<BinRequest[]>(BASE_URL + '/requests' + `?bin_name=${binName}`);
+  const response = await axios.get<RawRequest[]>(REQUESTS_URL + `?bin_name=${binName}`);
   return response.data;
 };
+
 
 const createBin = async (binName?: string) => {
   // The real route is /api/bins
   console.log(`creating bin ${binName}`);
-  const response = await axios.post<BinInfo>(BASE_URL + '/bins', { bin_name: binName });
-  return response.data;
+  const response = await axios.post<RawBin>(BINS_URL, { bin_name: binName });
+  return parseRawBin(response.data);
 };
 
 const fetchBins = async () => {
   // The real route is /api/bins
   console.log('fetching bins');
-  const response = await axios.get<BinInfo[]>(BASE_URL + '/bins');
-  return response.data;
+  const response = await axios.get<RawBin[]>(BINS_URL);
+  console.log(response.data);
+  return response.data.map(parseRawBin);
 };
+
 
 const deleteBin = async (binName: string) => {
   // The real route is /api/bins/:name
   console.log(`deleting bin ${binName}`);
-  void await axios.delete(BASE_URL + '/bins', { data: { bin_name: binName } });
+  await axios.delete(BINS_URL + `/${binName}`);
 };
 
 // NOT IN MVP
@@ -37,11 +42,26 @@ const deleteBin = async (binName: string) => {
 //   return await axios.delete(BASE_URL + '/requests', { data: { id: requestId } });
 // };
 
+const clearBin = async (binName: string) => {
+  const requests = await fetchRequests(binName);
+  await Promise.all(
+    requests.map((request) => axios.delete(REQUESTS_URL + `/${request.id}`)),
+  );
+};
+
+
+export const parseRawBin = (raw: RawBin): BinInfo => {
+  return {
+    binId: raw.id,
+  } as BinInfo;
+};
+
 const fakeBinService: BinProvider = {
   fetchRequests,
   fetchBins,
   createBin,
   deleteBin,
+  clearBin,
   // deleteRequest,
 };
 
