@@ -3,7 +3,7 @@ import type { BinInfo } from './types';
 import { useBinService } from './contexts/binServiceContext.ts';
 import { useEffect, useState } from 'react';
 import { BinContext } from './contexts/binContext.ts';
-
+import Navbar from './components/Navbar.tsx';
 
 
 function App() {
@@ -32,6 +32,7 @@ function App() {
   return (
     <>
       <BinContext value={selectedBin}>
+        <Navbar/>
         {bins.map((bin) => (
           <button
             key={bin.binId}
