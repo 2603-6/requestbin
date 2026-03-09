@@ -1,25 +1,67 @@
-import mongoose from 'mongoose';
-import pg from 'pg'
-import dotenv from 'dotenv';
+import mongoose from "mongoose"
+import { mongoDBConnect, postgresPool } from "./database_connections"
 
-const postgresPool = new pg.Pool({
-  host: process.env.PGHOST,
-  port: parseInt(process.env.PGPORT || '5432'),
-  database: process.env.PGDATABASE,
-  user: process.env.PGUSER,
-  password: process.env.PGPASSWORD   
-});
+//mongodb queries
+const mongoCollection = () => mongoose.connection.collection("requests")
 
-if (!process.env.MONGO_CONNECTION_STRING) {
-    throw new Error('Missing required environment variable: MONGO_CONNECTION_STRING')
+const mongoFindRequestById = async (id: string ) => {
+    return mongoCollection().findOne({ request_id: id})
 }
-const mongoDBConnect = async (): Promise<void> => {
-    try {
-        await mongoose.connect(process.env.MONGO_CONNECTION_STRING as string)
-        console.log("MongoDB connected")
-    } catch (err) {
-        console.error("MongoDB connection error:", err)
-    }
-};
 
-mongoDBConnect();
+const mongoFindAllRequestById = async (ids: string[]): Promise<unknown[]> => {
+    return mongoCollection().find( {
+        request_id: { $in: ids}
+    }).toArray();
+}
+
+const insertIntoMongo = async (request_id: string, request_payload: unknown) => {
+
+    if (typeof request_payload !== "object" || request_payload === null) {
+        throw new Error("Request payload must be an object")
+  }
+    return mongoCollection().insertOne( {
+        request_id,
+        request: request_payload
+        //returns object {acknowledged: true||false, insertedId: new ObjectId({id})}
+    })
+}
+
+//postgres queries
+
+const postgresGetAllBins = async () => {
+    const result = await postgresPool.query('SELECT name FROM bins');
+    const binNames = result.rows.map(row => row.name);
+    return binNames
+    };
+
+const postgresGetAllRequests = async (binName: string) => {
+
+}
+// const run = async () => {
+//     await mongoDBConnect()
+//     // const result = await mongoFindRequestById('1234567890')
+//     //console.log(result)
+//     // const all_records =await mongoFindAllRequestById(['1234567890', '9876543210' ])
+//     // console.log(all_records)
+//     const payload=     {
+
+//             headers: {
+//                 "Content-Type": "application/json",
+//                 "User-Agent": "Mozilla/5.0"
+//             },
+//             body: { message: "im a bunch of 1's"},
+//             query_params: { one: "yes"}, 
+        
+//     }
+
+
+//     const result = await insertIntoMongo('1111111', payload)
+//     console.log(result)
+
+// }
+
+
+
+
+
+//run();
