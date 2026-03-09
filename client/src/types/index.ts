@@ -9,12 +9,8 @@ export interface IRequestProps {
   type: RequestType;
 }
 
-export interface IBinProps {
-  binId: string;
-  capacity?: number
-}
 
-export interface BinRequest {
+export interface RawRequest {
   id: number;
   bin_name: string;
   time_of_day: string;
@@ -25,13 +21,24 @@ export interface BinRequest {
   path: string;
 }
 
+export interface RawBin {
+  id: string;
+}
+
 export type BinInfo = {
-  bin_name: string;
+  binId: string;
+  capacity?: number;
 };
 
 export interface BinProvider {
   fetchBins: () => Promise<BinInfo[]>;
   createBin: (binName?: string) => Promise<BinInfo>;
   deleteBin: (binName: string) => Promise<void>;
-  fetchRequests: (binName: string) => Promise<BinRequest[]>;
+  fetchRequests: (binName: string) => Promise<RawRequest[]>;
+  clearBin: (binName: string) => Promise<void>;
+}
+
+export interface INavbarProps  {
+  listening: boolean;
+  toggleListening: () => void;
 }
