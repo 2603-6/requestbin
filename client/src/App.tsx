@@ -9,7 +9,6 @@ import Navbar from './components/Navbar.tsx';
 function App() {
   const [bins, setBins] = useState<BinInfo[]>([]);
   const [selectedBin, setSelectedBin] = useState<BinInfo | null>(null);
-  const [listening, setListening] = useState<boolean>(true);
   const binService = useBinService();
 
   useEffect(() => {
@@ -33,7 +32,7 @@ function App() {
   return (
     <>
       <BinContext value={selectedBin}>
-        <Navbar listening={listening} toggleListening={() => setListening(!listening)}/>
+        <Navbar/>
         {bins.map((bin) => (
           <button
             key={bin.binId}

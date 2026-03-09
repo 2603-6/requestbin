@@ -37,8 +37,3 @@ export interface BinProvider {
   fetchRequests: (binName: string) => Promise<RawRequest[]>;
   clearBin: (binName: string) => Promise<void>;
 }
-
-export interface INavbarProps  {
-  listening: boolean;
-  toggleListening: () => void;
-}

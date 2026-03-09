@@ -1,13 +1,10 @@
 import { type FC } from 'react';
-import type { INavbarProps } from '../types';
 import { useBin } from '../contexts/binContext.ts';
 import { useBinService } from '../contexts/binServiceContext.ts';
 
-const Navbar: FC<INavbarProps> = ({ listening, toggleListening }) => {
+const Navbar: FC = () => {
   const selectedBin = useBin();
   const binService = useBinService();
-
-  const autoRefreshButtonColor = listening ? 'green' : 'red';
 
   const handleClearBin = async () => {
     if (!selectedBin) return;
@@ -27,12 +24,6 @@ const Navbar: FC<INavbarProps> = ({ listening, toggleListening }) => {
       <div className="navbar-controls">
         {selectedBin && (
           <>
-            <button
-              style={{ backgroundColor: autoRefreshButtonColor }}
-              onClick={toggleListening}
-            >
-              Toggle Auto-Refresh
-            </button>
             <button onClick={() => void handleClearBin()}>
               Clear Bin
             </button>
