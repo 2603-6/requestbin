@@ -37,10 +37,6 @@ a:hover {
   min-height: 100vh;
 }
 
-.request-container {
-  padding-right: 1rem;
-}
-
 .request-card {
   display: flex;
   align-items: center;

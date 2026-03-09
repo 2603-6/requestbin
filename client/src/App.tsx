@@ -33,13 +33,7 @@ function App() {
   return (
     <>
       <BinContext value={selectedBin}>
-        <Navbar
-          binId={binId}
-          toggleListening={toggleListening}
-          listening={listening}
-          onClearBin={clearBin}
-          onDeleteBin={deleteBin}
-        />
+        <Navbar listening={listening} toggleListening={() => setListening(!listening)}/>
         {bins.map((bin) => (
           <button
             key={bin.binId}
