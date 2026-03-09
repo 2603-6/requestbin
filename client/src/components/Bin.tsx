@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import type { FC } from 'react';
-import type { RawRequest } from '../types';
+import type { IRequestProps } from '../types';
 import { useBinService } from '../contexts/binServiceContext.ts';
 import { useBin } from '../contexts/binContext.ts';
+import Request from './Request.tsx';
 
 const Bin: FC = () => {
-  const [requests, setRequests] = useState<RawRequest[]>([]);
+  const [requests, setRequests] = useState<IRequestProps[]>([]);
   const binService = useBinService();
   const bin = useBin();
   
@@ -29,16 +30,12 @@ const Bin: FC = () => {
     <div className={'bin'}>
       <h1>Bin:{bin.binId}</h1>
       <p>Requests are collected at SOME_URL/{bin.binId}</p>
+      
       {bin.capacity ? <p>Capacity:{bin.capacity}</p> : null}
+      
       <div className={'requests'}>
         {requests.map((request) => (
-          <div key={request.id} className={'request-card'}>
-            <p>{request.http_method}</p>
-            <p>{request.path} and query params here</p>
-            <p>{request.date_stamp}</p>
-            <p>Headers - add click event to expand</p>
-            <p>Body - add click event to expand, don't show if empty</p>
-          </div>
+          <Request key={request.requestId} {...request} />
         ))}
       </div>
     </div>

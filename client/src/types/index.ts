@@ -1,12 +1,14 @@
-export type RequestType = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH' | 'CONNECT' | 'HEAD' | 'TRACE' ;
+export type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH' | 'CONNECT' | 'HEAD' | 'TRACE' ;
 
 
 export interface IRequestProps {
   requestId: number;
   requestHeaders: string;
+  requestBody?: string;
+  queryParams?: string;
   timestamp: string;
-  route: string;
-  type: RequestType;
+  path: string;
+  type: RequestMethod;
 }
 
 
@@ -15,9 +17,9 @@ export interface RawRequest {
   bin_name: string;
   time_of_day: string;
   date_stamp: string;
-  http_method: RequestType;
+  http_method: RequestMethod;
   body: string;
-  headers: object;
+  headers: string;
   path: string;
 }
 
@@ -34,6 +36,6 @@ export interface BinProvider {
   fetchBins: () => Promise<BinInfo[]>;
   createBin: (binName?: string) => Promise<BinInfo>;
   deleteBin: (binName: string) => Promise<void>;
-  fetchRequests: (binName: string) => Promise<RawRequest[]>;
+  fetchRequests: (binName: string) => Promise<IRequestProps[]>;
   clearBin: (binName: string) => Promise<void>;
 }
