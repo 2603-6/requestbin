@@ -8,13 +8,13 @@ const mongoFindRequestById = async (id: string ) => {
     return mongoCollection().findOne({ request_id: id})
 }
 
-const mongoFindAllRequestById = async (ids: string[]): Promise<unknown[]> => {
+export const mongoFindAllRequestById = async (ids: string[]): Promise<unknown[]> => {
     return mongoCollection().find( {
         request_id: { $in: ids}
     }).toArray();
 }
 
-const insertIntoMongo = async (request_id: string, request_payload: unknown) => {
+export const insertIntoMongo = async (request_id: string, request_payload: unknown) => {
 
     if (typeof request_payload !== "object" || request_payload === null) {
         throw new Error("Request payload must be an object")
@@ -28,7 +28,7 @@ const insertIntoMongo = async (request_id: string, request_payload: unknown) => 
 
 //postgres queries
 
-const postgresGetAllBins = async () => {
+export const postgresGetAllBins = async () => {
     const result = await postgresPool.query('SELECT name FROM bins');
     const binNames = result.rows.map(row => row.name);
     return binNames
