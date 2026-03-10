@@ -65,6 +65,9 @@ app.get('/api/bins/:binName/requests', async (req: Request, res: Response) => {
         const binName = req.params.binName as string;
         const finalResponse = await mockGetRequestsByBinName(binName);
 
+        // kass
+        //const pgMetadata = await postgresGetAllRequests(binName);
+
 
 
         console.log('heres the json');
