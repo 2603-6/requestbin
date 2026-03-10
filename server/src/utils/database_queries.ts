@@ -14,13 +14,12 @@ export const mongoFindAllRequestById = async (ids: string[]): Promise<unknown[]>
     }).toArray();
 }
 
-export const insertIntoMongo = async (request_id: string, request_payload: unknown) => {
+export const insertIntoMongo = async (request_payload: unknown) => {
 
     if (typeof request_payload !== "object" || request_payload === null) {
         throw new Error("Request payload must be an object")
   }
     return mongoCollection().insertOne( {
-        request_id,
         request: request_payload
         //returns object {acknowledged: true||false, insertedId: new ObjectId({id})}
     })
@@ -34,34 +33,45 @@ export const postgresGetAllBins = async () => {
     return binNames
     };
 
-const postgresGetAllRequests = async (binName: string) => {
-
+const postgresGetSingleBin = async (binName: string) => {
+    const binResult = await postgresPool.query(
+        `SELECT id FROM bins where name = $1`, [binName]
+    )
+    return binResult.rows[0]
 }
-// const run = async () => {
-//     await mongoDBConnect()
-//     // const result = await mongoFindRequestById('1234567890')
-//     //console.log(result)
-//     // const all_records =await mongoFindAllRequestById(['1234567890', '9876543210' ])
-//     // console.log(all_records)
-//     const payload=     {
 
-//             headers: {
-//                 "Content-Type": "application/json",
-//                 "User-Agent": "Mozilla/5.0"
-//             },
-//             body: { message: "im a bunch of 1's"},
-//             query_params: { one: "yes"}, 
-        
-//     }
+export const postgresGetAllRequests = async (binName: string) => {
+    const result = await postgresPool.query(`select requests.id, bin.name as bin_name, 
+        requests.mongodb_id, requests.time_stamp, requests.http_method
+        FROM "requests" 
+        JOIN bins bin on requests.bin_id = bin.id
+        WHERE bin.name = $1`,
+        [binName]
+    );
+    return result.rows;
+}
 
+export const postgresCreateBin = async (binName: string) => {
+    let singleBin = await postgresGetSingleBin(binName)
+    if (!singleBin) {
+        throw new Error(`Bin ${binName} does not exist`)
+    }    
+    const result = await postgresPool.query(
+        `INSERT INTO bins (name) VALUES ($1)`, [binName]
+    );
+    return result
+}
 
-//     const result = await insertIntoMongo('1111111', payload)
-//     console.log(result)
-
-// }
-
-
-
-
-
-//run();
+export const postgresInsertRequest = async (binName: string, mongodbID: string, httpMethod: string) => {
+    let singleBin = await postgresGetSingleBin(binName)
+    if (!singleBin) {
+        throw new Error(`Bin ${binName} does not exist`)
+    }
+    const result = await postgresPool.query(
+        `INSERT INTO requests (bin_id, mongodb_id, http_method)
+        VALUES ((SELECT id from bins where name = $1), $2, $3)
+        RETURNING *`, 
+        [binName, mongodbID, httpMethod]
+    );
+    return result.rows[0];
+}
