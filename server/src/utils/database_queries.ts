@@ -1,25 +1,26 @@
 import mongoose from "mongoose"
-import { mongoDBConnect, postgresPool } from "./database_connections"
+import { postgresPool } from "./database_connections"
 
 //mongodb queries
 const mongoCollection = () => mongoose.connection.collection("requests")
 
-const mongoFindRequestById = async (id: string ) => {
-    return mongoCollection().findOne({ request_id: id})
+const mongoFindRequestById = async (id: string) => {
+    return mongoCollection().findOne({ _id: new mongoose.Types.ObjectId(id) } as any)
 }
 
 export const mongoFindAllRequestById = async (ids: string[]): Promise<unknown[]> => {
-    return mongoCollection().find( {
-        request_id: { $in: ids}
-    }).toArray();
+    const objectIds = ids.map((id) => new mongoose.Types.ObjectId(id));
+    return mongoCollection().find({
+        _id: { $in: objectIds }
+    } as any).toArray();
 }
 
 export const insertIntoMongo = async (request_payload: unknown) => {
 
     if (typeof request_payload !== "object" || request_payload === null) {
         throw new Error("Request payload must be an object")
-  }
-    return mongoCollection().insertOne( {
+    }
+    return mongoCollection().insertOne({
         request: request_payload
         //returns object {acknowledged: true||false, insertedId: new ObjectId({id})}
     })
@@ -31,7 +32,7 @@ export const postgresGetAllBins = async () => {
     const result = await postgresPool.query('SELECT name FROM bins');
     const binNames = result.rows.map(row => row.name);
     return binNames
-    };
+};
 
 const postgresGetSingleBin = async (binName: string) => {
     const binResult = await postgresPool.query(
@@ -53,13 +54,14 @@ export const postgresGetAllRequests = async (binName: string) => {
 
 export const postgresCreateBin = async (binName: string) => {
     let singleBin = await postgresGetSingleBin(binName)
-    if (!singleBin) {
-        throw new Error(`Bin ${binName} does not exist`)
-    }    
+    if (singleBin) {
+        throw new Error(`Bin ${binName} already exists`)
+    }
     const result = await postgresPool.query(
-        `INSERT INTO bins (name) VALUES ($1)`, [binName]
+        `INSERT INTO bins (name) VALUES ($1)
+        RETURNING name`, [binName]
     );
-    return result
+    return result.rows[0]
 }
 
 export const postgresInsertRequest = async (binName: string, mongodbID: string, httpMethod: string) => {
@@ -70,7 +72,7 @@ export const postgresInsertRequest = async (binName: string, mongodbID: string, 
     const result = await postgresPool.query(
         `INSERT INTO requests (bin_id, mongodb_id, http_method)
         VALUES ((SELECT id from bins where name = $1), $2, $3)
-        RETURNING *`, 
+        RETURNING *`,
         [binName, mongodbID, httpMethod]
     );
     return result.rows[0];
