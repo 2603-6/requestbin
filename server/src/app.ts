@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { mongoDBConnect } from "./utils/database_connections"
+import mongoose from 'mongoose';
 import {
     insertIntoMongo,
     postgresGetAllBins,
@@ -72,18 +73,19 @@ app.get('/api/bins/:binName/requests', async (req: Request, res: Response) => {
         // 5. Merge and shape the final response
         const finalResult = pgRequests.map(row => {
             const mongoDoc = mongoMap.get(row.mongodb_id);
-            const ts = new Date(row.time_stamp);
-            //console.log(mongoDoc);
+            const timeStamp = new Date(row.time_stamp)
+    
+            console.log(mongoDoc);
             return {
                 id: row.id,
                 bin_name: row.bin_name,
-                time_of_day: ts.toTimeString().split(" ")[0],        // "HH:MM:SS"
-                date_stamp: ts.toLocaleDateString("en-GB").replace(/\//g, ":"), // "DD:MM:YYYY"
+                time_of_day: timeStamp.toTimeString().split(" ")[0],        // "HH:MM:SS"
+                date_stamp: timeStamp.toLocaleDateString("en-GB").replace(/\//g, ":"), // "DD:MM:YYYY"
                 http_method: row.http_method,
-                body: mongoDoc?.request?.body ?? null,
-                headers: mongoDoc?.request?.headers ?? null,
-                path: mongoDoc?.request?.path ?? null,
-                query_params: mongoDoc?.request?.query_params ?? null,
+                body: mongoDoc?.request?.body ?? {},
+                headers: mongoDoc?.request?.headers ?? {},
+                path: mongoDoc?.request?.path ?? {},
+                query_params: mongoDoc?.request?.query_params ?? {},
             };   
         });
         res.status(200).json(finalResult);
