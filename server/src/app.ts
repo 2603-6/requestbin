@@ -50,19 +50,33 @@ app.get('/api/bins', async (req: Request, res: Response) => {
     }
 })
 
-// deletes a bin
+// deletes a bin and all its requests
 app.delete('/api/bins/:binName', async (req: Request, res: Response) => {
     try {
         const binName = req.params.binName as string;
-        const result = await postgresDeleteBin(binName)
-        res.json({ msg: 'it works?' })
+        await postgresDeleteBin(binName)
+        res.status(204).send();
     } catch (error) {
         console.error("Error deleting bin:", error);
         res.status(500).json({
             error: "server error",
             msg: "Could not delete bin at this time."
         })
+    }
+})
 
+// deletes all requests in a bin 
+app.delete('/api/bins/:binName/requests', async (req: Request, res: Response) => {
+    try {
+        const binName = req.params.binName as string;
+        // call some postgres function to delete requests based on binName
+        res.json({ msg: `deleted requests in ${binName}` })
+    } catch (error) {
+        console.error("Error deleting requests:", error);
+        res.status(500).json({
+            error: "server error",
+            msg: "Could not delete requests at this time."
+        })
     }
 })
 
