@@ -12,6 +12,7 @@ export interface IRequestProps {
 }
 
 
+
 export interface RawRequest {
   id: number;
   bin_name: string;
@@ -19,8 +20,9 @@ export interface RawRequest {
   date_stamp: string;
   http_method: RequestMethod;
   body: string;
-  headers: string;
-  path: string;
+  headers: object;
+  path: object;
+  query_params: object;
 }
 
 export interface RawBin {
