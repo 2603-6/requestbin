@@ -65,6 +65,17 @@ export const postgresCreateBin = async (binName: string) => {
     return result.rows[0]
 }
 
+export const postgresDeleteBin = async (binName: string) => {
+    let singleBin = await postgresGetSingleBin(binName)
+    if (!singleBin) {
+        throw new Error(`Bin ${binName} does not exist`)
+    }
+    const result = await postgresPool.query(
+        `DELETE FROM bins WHERE name = $1`, [binName]
+    );
+    return result.rows[0]
+}
+
 export const postgresInsertRequest = async (binName: string, mongodbID: string, httpMethod: string) => {
     let singleBin = await postgresGetSingleBin(binName)
     if (!singleBin) {
