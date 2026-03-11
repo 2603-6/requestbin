@@ -69,14 +69,12 @@ app.get('/api/bins/:binName/requests', async (req: Request, res: Response) => {
         );
 
 
-        console.log(mongoMap);
-
         // 5. Merge and shape the final response
         const finalResult = pgRequests.map(row => {
             const mongoDoc = mongoMap.get(row.mongodb_id);
             const ts = new Date(row.time_stamp);
             //console.log(mongoDoc);
-            /*/return {
+            return {
                 id: row.id,
                 bin_name: row.bin_name,
                 time_of_day: ts.toTimeString().split(" ")[0],        // "HH:MM:SS"
@@ -86,7 +84,7 @@ app.get('/api/bins/:binName/requests', async (req: Request, res: Response) => {
                 headers: mongoDoc?.request?.headers ?? null,
                 path: mongoDoc?.request?.path ?? null,
                 query_params: mongoDoc?.request?.query_params ?? null,
-            };   */
+            };   
         });
         res.status(200).json(finalResult);
     } catch (error) {
