@@ -1,5 +1,6 @@
 import axios from 'axios';
-import type { BinInfo, BinProvider, RawBin, RawRequest, IRequestProps } from '../types';
+import type { BinProvider, RawBin, RawRequest } from '../types';
+import { parseRawBin, parseRawRequest } from '../utils.ts';
 
 const BASE_URL = 'http://localhost:3001';
 const BINS_URL = BASE_URL + '/bins';
@@ -47,23 +48,6 @@ const clearBin = async (binName: string) => {
   await Promise.all(
     requests.map((request) => axios.delete(REQUESTS_URL + `/${request.requestId}`)),
   );
-};
-
-
-const parseRawBin = (raw: RawBin): BinInfo => {
-  return {
-    binId: raw.id,
-  } as BinInfo;
-};
-
-const parseRawRequest = (raw: RawRequest): IRequestProps => {
-  return {
-    requestId: raw.id,
-    requestHeaders: raw.headers,
-    timestamp: `${raw.date_stamp} ${raw.time_of_day}`,
-    path: raw.path,
-    type: raw.http_method,
-  };
 };
 
 
