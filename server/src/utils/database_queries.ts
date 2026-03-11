@@ -9,9 +9,8 @@ const mongoFindRequestById = async (id: string) => {
 }
 
 export const mongoFindAllRequestById = async (ids: string[]): Promise<unknown[]> => {
-    const objectIds = ids.map((id) => new mongoose.Types.ObjectId(id));
     return mongoCollection().find({
-        _id: { $in: objectIds }
+        _id: { $in: ids }
     } as any).toArray();
 }
 
