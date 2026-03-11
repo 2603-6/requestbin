@@ -24,9 +24,9 @@ const createBin = async (binName?: string) => {
 const fetchBins = async () => {
   // The real route is /api/bins
   console.log('fetching bins');
-  const response = await axios.get<RawBin[]>(BINS_URL);
+  const response = await axios.get<{ bin_names: RawBin[] }>(BINS_URL);
   console.log(response.data);
-  return response.data.map(parseRawBin);
+  return response.data.bin_names.map(parseRawBin);
 };
 
 
