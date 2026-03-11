@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { mongoDBConnect } from "./utils/database_connections"
-import mongoose from 'mongoose';
 import {
     insertIntoMongo,
     postgresGetAllBins,
@@ -10,7 +9,6 @@ import {
     postgresInsertRequest,
     mongoFindAllRequestById,
 } from './utils/database_queries';
-import { mongo } from 'mongoose';
 
 const app = express();
 app.use(express.json());
@@ -75,7 +73,6 @@ app.get('/api/bins/:binName/requests', async (req: Request, res: Response) => {
             const mongoDoc = mongoMap.get(row.mongodb_id);
             const timeStamp = new Date(row.time_stamp)
     
-            console.log(mongoDoc);
             return {
                 id: row.id,
                 bin_name: row.bin_name,
@@ -102,12 +99,12 @@ app.get('/api/bins/:binName/requests', async (req: Request, res: Response) => {
 app.all('/bins/:binName', async (req: Request, res: Response) => {
     try {
         const mongoData = {
-            //request: {
+
             headers: req.headers,
             body: req.body,
             path: req.originalUrl,
             query_params: req.query
-            //}
+
         };
 
         const binName = req.params.binName as string;
