@@ -24,7 +24,7 @@ export interface RawRequest {
 }
 
 export interface RawBin {
-  id: string;
+  bin_name: string;
 }
 
 export type BinInfo = {
