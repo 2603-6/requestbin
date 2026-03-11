@@ -6,6 +6,7 @@ import {
     postgresGetAllBins,
     postgresGetAllRequests,
     postgresCreateBin,
+    postgresDeleteBin,
     postgresInsertRequest,
     mongoFindAllRequestById,
 } from './utils/database_queries';
@@ -39,13 +40,29 @@ app.get('/api/bins', async (req: Request, res: Response) => {
     try {
         const result = await postgresGetAllBins();
         console.log("Bins retrieved: ", result);
-        res.json(result);
+        res.json({ binName: result });
     } catch (error) {
         console.error("Error fetching bins:", error);
         res.status(500).json({
             error: "server error",
             msg: "Could not retrieve bins at this time."
         })
+    }
+})
+
+// deletes a bin
+app.delete('/api/bins/:binName', async (req: Request, res: Response) => {
+    try {
+        const binName = req.params.binName as string;
+        const result = await postgresDeleteBin(binName)
+        res.json({ msg: 'it works?' })
+    } catch (error) {
+        console.error("Error deleting bin:", error);
+        res.status(500).json({
+            error: "server error",
+            msg: "Could not delete bin at this time."
+        })
+
     }
 })
 
@@ -72,7 +89,7 @@ app.get('/api/bins/:binName/requests', async (req: Request, res: Response) => {
         const finalResult = pgRequests.map(row => {
             const mongoDoc = mongoMap.get(row.mongodb_id);
             const timeStamp = new Date(row.time_stamp)
-    
+
             return {
                 id: row.id,
                 bin_name: row.bin_name,
@@ -83,7 +100,7 @@ app.get('/api/bins/:binName/requests', async (req: Request, res: Response) => {
                 headers: mongoDoc?.request?.headers ?? {},
                 path: mongoDoc?.request?.path ?? {},
                 query_params: mongoDoc?.request?.query_params ?? {},
-            };   
+            };
         });
         res.status(200).json(finalResult);
     } catch (error) {
@@ -117,12 +134,9 @@ app.all('/bins/:binName', async (req: Request, res: Response) => {
         if (!binName) {
             throw new Error("Bin name is missing in the request parameters");
         }
-        const pgRow = await postgresInsertRequest(
-            binName,
-            mongodbID,
-            req.method)
+        const pgRow = await postgresInsertRequest(binName, mongodbID, req.method)
 
-        res.status(201).json(pgRow)
+        res.status(202).send();
     } catch (error) {
         console.error("Error: ", error);
         res.status(500).json({
