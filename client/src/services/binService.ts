@@ -46,7 +46,7 @@ const clearBin = async (binName: string) => {
 };
 
 
-const fakeBinService: BinProvider = {
+const binService: BinProvider = {
   fetchRequests,
   fetchBins,
   createBin,
@@ -55,4 +55,4 @@ const fakeBinService: BinProvider = {
   // deleteRequest,
 };
 
-export default fakeBinService;
+export default binService;
