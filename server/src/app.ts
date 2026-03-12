@@ -59,7 +59,8 @@ const broadcastToBin = (binName: string, data: object) => {
     const subscribers = binSubscribers.get(binName)
     console.log('binsubscribers', binSubscribers)
     if (!subscribers) return;
-    const payload = JSON.stringify(data);
+    const binWrap = {[binName]: data }
+    const payload = JSON.stringify(binWrap);
     subscribers.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(payload)
@@ -163,7 +164,6 @@ app.get('/api/bins/:binName/requests', async (req: Request, res: Response) => {
         // 5. Merge and shape the final response
         const finalResult = pgRequests.map(row => {
             const mongoDoc = mongoMap.get(row.mongodb_id);
-            const timeStamp = new Date(row.time_stamp)
 
             return {
                 id: row.id,
@@ -228,26 +228,21 @@ app.all('/bins/:binName', async (req: Request, res: Response) => {
             throw new Error("Bin name is missing in the request parameters");
         }
         const pgRow = await postgresInsertRequest(binName, mongodbID, req.method)
-//         const newRequestPayload = {
-//             id: pgRow.id,
-//             bin_name: binName,
-//             time_of_day: pgRow.time_stamp.toTimeString().split(" ")[0],
-//             date_stamp: pgRow.time_stamp.toLocaleDateString("en-GB").replace(/\//g, ":"),
-//             http_method: pgRow.http_method,
-//             body: mongoData.body ?? {},
-//             headers: mongoData.headers ?? {},
-//             path: mongoData.path ?? {},
-//             query_params: mongoData.query_params ?? {},
-//         };
 
-//         // pushes notification to any client ( including browser )
-//         wss.clients.forEach((client) => {
-//             if (client.readyState === 1) {
-//                 client.send(JSON.stringify(newRequestPayload));
-//             }
-//         });
         broadcastToBin(binName, {
-          event: "new_request"  
+        
+            
+                id: pgRow.id,
+                bin_name: pgRow.bin_name,
+                time_of_day: pgRow.time_stamp.toTimeString().split(" ")[0],        // "HH:MM:SS"
+                date_stamp: pgRow.time_stamp.toLocaleDateString("en-GB").replace(/\//g, ":"), // "DD:MM:YYYY"
+                http_method: pgRow.http_method,
+                body: mongoData.body ?? {},
+                headers: mongoData?.headers ?? {},
+                path: mongoData?.path ?? {},
+                query_params: mongoData?.query_params ?? {},
+            
+          
         });
         console.log('Broadcast sent to bin', binName)
         res.status(202).send();
