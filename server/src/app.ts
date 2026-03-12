@@ -40,7 +40,7 @@ app.post('/api/bins', async (req: Request, res: Response) => {
 app.get('/api/bins', async (req: Request, res: Response) => {
     try {
         const result = await postgresGetAllBins();
-        console.log("Bins retrieved: ", result);
+
         res.json({bin_names: result})
     } catch (error) {
         console.error("Error fetching bins:", error);
@@ -72,12 +72,12 @@ app.delete('/api/bins/:binName', async (req: Request, res: Response) => {
 })
 
 //delete requests in a bin
-app.delete('api/bins/:binName/requests', async (req: Request, res: Response) => {
+app.delete('/api/bins/:binName/requests', async (req: Request, res: Response) => {
     try {
         const binName = req.params.binName as string;
         const pgRequests = await postgresGetAllRequests(binName);
         const mongoIDs = pgRequests.map((request) => request.mongodb_id);
-
+    
         await mongoDeleteRequestsFromBin(mongoIDs)
         await postgresDeleteAllRequestsFromBin(binName)
         res.status(204).send()
