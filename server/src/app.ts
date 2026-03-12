@@ -54,7 +54,6 @@ app.get('/api/bins', async (req: Request, res: Response) => {
 app.delete('/api/bins/:binName', async (req: Request, res: Response) => {
     try {
         const binName = req.params.binName as string;
-        console.log(binName)
         const pgRequests = await postgresGetAllRequests(binName);
         const mongoIDs = pgRequests.map((request) => request.mongodb_id);
 
@@ -70,6 +69,11 @@ app.delete('/api/bins/:binName', async (req: Request, res: Response) => {
 
     }
 })
+
+//delete requests in a bin
+app.delete('api/bins/:binName/requests'), async (req: Request, res: Response) => {
+
+}
 
 // get all requests for a given bin
 app.get('/api/bins/:binName/requests', async (req: Request, res: Response) => {
