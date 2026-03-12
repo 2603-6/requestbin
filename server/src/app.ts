@@ -168,8 +168,8 @@ app.get('/api/bins/:binName/requests', async (req: Request, res: Response) => {
             return {
                 id: row.id,
                 bin_name: row.bin_name,
-                time_of_day: timeStamp.toTimeString().split(" ")[0],        // "HH:MM:SS"
-                date_stamp: timeStamp.toLocaleDateString("en-GB").replace(/\//g, ":"), // "DD:MM:YYYY"
+                time_of_day: row.time_stamp.toTimeString().split(" ")[0],        // "HH:MM:SS"
+                date_stamp: row.time_stamp.toLocaleDateString("en-GB").replace(/\//g, ":"), // "DD:MM:YYYY"
                 http_method: row.http_method,
                 body: mongoDoc?.request?.body ?? {},
                 headers: mongoDoc?.request?.headers ?? {},
@@ -228,7 +228,24 @@ app.all('/bins/:binName', async (req: Request, res: Response) => {
             throw new Error("Bin name is missing in the request parameters");
         }
         const pgRow = await postgresInsertRequest(binName, mongodbID, req.method)
+//         const newRequestPayload = {
+//             id: pgRow.id,
+//             bin_name: binName,
+//             time_of_day: pgRow.time_stamp.toTimeString().split(" ")[0],
+//             date_stamp: pgRow.time_stamp.toLocaleDateString("en-GB").replace(/\//g, ":"),
+//             http_method: pgRow.http_method,
+//             body: mongoData.body ?? {},
+//             headers: mongoData.headers ?? {},
+//             path: mongoData.path ?? {},
+//             query_params: mongoData.query_params ?? {},
+//         };
 
+//         // pushes notification to any client ( including browser )
+//         wss.clients.forEach((client) => {
+//             if (client.readyState === 1) {
+//                 client.send(JSON.stringify(newRequestPayload));
+//             }
+//         });
         broadcastToBin(binName, {
           event: "new_request"  
         });
