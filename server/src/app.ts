@@ -33,9 +33,6 @@ wss.on('connection', (ws) => {
         try {
             const { binName } = JSON.parse(message.toString());
 
-            if (subscribedBin) {
-                binSubscribers.get(subscribedBin)?.delete(ws);
-            }
             subscribedBin = binName;
             if (!binSubscribers.has(binName)) {
                 binSubscribers.set(binName, new Set());
