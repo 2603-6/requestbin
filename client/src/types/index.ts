@@ -30,7 +30,7 @@ export interface RawBin {
 }
 
 export type BinInfo = {
-  binId: string;
+  binName: string;
   capacity?: number;
 };
 

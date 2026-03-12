@@ -20,7 +20,7 @@ const BinForm = ({ onCreateBin }: TodoFormProps) => {
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const binData = {
-      binId: formState.binName,
+      binName: formState.binName,
     };
 
     onCreateBin(binData);

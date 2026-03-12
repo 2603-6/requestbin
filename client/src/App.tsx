@@ -27,7 +27,7 @@ function App() {
     }
   };
 
-  const isSelected = (bin: BinInfo): boolean => bin.binId === selectedBin?.binId;
+  const isSelected = (bin: BinInfo): boolean => bin.binName === selectedBin?.binName;
 
   return (
     <>
@@ -35,11 +35,11 @@ function App() {
         <Navbar/>
         {bins.map((bin) => (
           <button
-            key={bin.binId}
+            key={bin.binName}
             onClick={() => toggleSelectedBin(bin)}
             style={{ backgroundColor: isSelected(bin) ? 'green' : '' }}
           >
-            {bin.binId}
+            {bin.binName}
           </button>
         ))}
         {selectedBin ? <Bin /> : null}
