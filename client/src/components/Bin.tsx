@@ -32,31 +32,31 @@ const Bin: FC = () => {
   if (!bin) throw new Error('Cannot render without a bin!');
 
   // TODO: Fix this link
-  const link: string = `https://ToBeFiguredOut.gov/bins/${bin.binId}`;
+  const link: string = `https://ToBeFiguredOut.gov/bins/${bin.binName}`;
 
   const copyLink = async (): Promise<void> => {
     await navigator.clipboard.writeText(link);
   };
 
   useEffect(() => {
-    const fetchRequests = async (binId: string) => {
-      return await binService.fetchRequests(binId);
+    const fetchRequests = async (binName: string) => {
+      return await binService.fetchRequests(binName);
     };
 
     if (bin) {
-      fetchRequests(bin.binId).then(( data ) => {
+      fetchRequests(bin.binName).then(( data ) => {
         setRequests(data);
       }).catch((e) => {
         console.error(e);
       });
     }
 
-  }, [bin, bin?.binId, binService]);
+  }, [bin, bin?.binName, binService]);
 
   // add formatting to date to convert from epoch time to formatted date
   return (
     <div style={binStyle}>
-      <h1>Bin:{bin.binId}</h1>
+      <h1>Bin:{bin.binName}</h1>
       <p>Total requests: {requests.length}</p>
       <div>
         Requests are collected at:

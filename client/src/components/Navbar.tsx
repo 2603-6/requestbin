@@ -8,12 +8,12 @@ const Navbar: FC = () => {
 
   const handleClearBin = async () => {
     if (!selectedBin) return;
-    await binService.clearBin(selectedBin.binId);
+    await binService.clearBin(selectedBin.binName);
   };
 
   const handleDeleteBin = async () => {
     if (!selectedBin) return;
-    await binService.deleteBin(selectedBin.binId);
+    await binService.deleteBin(selectedBin.binName);
   };
 
   return (
