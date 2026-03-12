@@ -3,7 +3,7 @@ import type { BinProvider, RawBin, RawRequest } from '../types';
 import { parseRawBin, parseRawRequest } from '../utils.ts';
 
 const BASE_URL = 'http://localhost:3000';
-const BINS_URL = BASE_URL + '/bins';
+const BINS_URL = BASE_URL + '/api/bins';
 
 const fetchRequests = async (binName: string) => {
   console.log(`fetching requests for bin ${binName}`);
@@ -14,8 +14,8 @@ const fetchRequests = async (binName: string) => {
 
 const createBin = async (binName?: string) => {
   console.log(`creating bin ${binName}`);
-  const response = await axios.post<RawBin>(BINS_URL, { bin_name: binName });
-  return parseRawBin(response.data);
+  const response = await axios.post<{ id: RawBin }>(BINS_URL, { bin_name: binName });
+  return parseRawBin(response.data.id);
 };
 
 const fetchBins = async () => {
@@ -42,7 +42,7 @@ const deleteBin = async (binName: string) => {
 
 const clearBin = async (binName: string) => {
   console.log(`deleting all requests in ${binName}`);
-  await axios.delete(BINS_URL + `/${binName}`);
+  await axios.delete(BINS_URL + `/${binName}/requests`);
 };
 
 

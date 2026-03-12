@@ -32,7 +32,7 @@ const Bin: FC = () => {
   if (!bin) throw new Error('Cannot render without a bin!');
 
   // TODO: Fix this link
-  const link: string = `https://ToBeFiguredOut.gov/bins/${bin.binName}`;
+  const link: string = `http://localhost:3000/bins/${bin.binName}`;
 
   const copyLink = async (): Promise<void> => {
     await navigator.clipboard.writeText(link);
@@ -56,7 +56,7 @@ const Bin: FC = () => {
   // add formatting to date to convert from epoch time to formatted date
   return (
     <div style={binStyle}>
-      <h1>Bin:{bin.binName}</h1>
+      <h1>Bin: {bin.binName}</h1>
       <p>Total requests: {requests.length}</p>
       <div>
         Requests are collected at:
