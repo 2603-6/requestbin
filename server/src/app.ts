@@ -1,5 +1,7 @@
 import express, { Request, Response } from 'express';
 import { mongoDBConnect } from "./utils/database_connections"
+import { WebSocketServer, WebSocket } from 'ws';
+import { createServer } from 'http';
 import {
     insertIntoMongo,
     postgresGetAllBins,
@@ -18,8 +20,52 @@ import cors from 'cors';
 const app = express();
 app.use(cors({origin: 'http://localhost:5174'}));
 app.use(express.json());
+const server = createServer(app);
+const wss = new WebSocketServer( { server, path: '/ws' })
 
+const binSubscribers = new Map<string, Set<WebSocket>>();
 
+wss.on('connection', (ws) => {
+    let subscribedBin: string | null = null;
+
+    ws.on('message', (message) => {
+
+        try {
+            const { binName } = JSON.parse(message.toString());
+
+            subscribedBin = binName;
+            if (!binSubscribers.has(binName)) {
+                binSubscribers.set(binName, new Set());
+        }
+            //ensures add is not null or undefined with !
+            binSubscribers.get(binName)!.add(ws);
+            ws.send(JSON.stringify({ event: 'subscribed', binName}))
+        } catch (error){
+            console.error('WebSocket message error:', error);
+            ws.send(JSON.stringify({ event: 'error', msg: 'Invalid message format' }));
+        }
+      
+    });
+
+    ws.on('close', () => {
+        if (subscribedBin) {
+            binSubscribers.get(subscribedBin)?.delete(ws);
+        }
+    });
+});
+
+//send data to all clients watching a specific bin
+const broadcastToBin = (binName: string, data: object) => {
+    const subscribers = binSubscribers.get(binName)
+    console.log('binsubscribers', binSubscribers)
+    if (!subscribers) return;
+    const payload = JSON.stringify(data);
+    subscribers.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(payload)
+        }
+    });
+}
 
 app.get('/', (req: Request, res: Response) => {
     res.send("Hello World!")
@@ -183,6 +229,10 @@ app.all('/bins/:binName', async (req: Request, res: Response) => {
         }
         const pgRow = await postgresInsertRequest(binName, mongodbID, req.method)
 
+        broadcastToBin(binName, {
+          event: "new_request"  
+        });
+        console.log('Broadcast sent to bin', binName)
         res.status(202).send();
     } catch (error) {
         console.error("Error: ", error);
@@ -197,7 +247,7 @@ app.all('/bins/:binName', async (req: Request, res: Response) => {
 const startServer = async () => {
     const PORT = 3000;
     await mongoDBConnect();
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     })
 
