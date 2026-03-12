@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-// import { useBinService } from '../contexts/binServiceContext.ts';
 import type { IRequestProps } from '../types/index.ts';
 import { useState } from 'react';
 
@@ -22,11 +21,6 @@ const Request: FC<IRequestProps> = ({
   requestBody,
   queryParams,
 }) => {
-
-
-
-  
-  
 
   return (
     <div className={'request-card'}>
