@@ -1,5 +1,7 @@
 import express, { Request, Response } from 'express';
 import { mongoDBConnect } from "./utils/database_connections"
+import { WebSocketServer, WebSocket } from 'ws';
+import { createServer } from 'http';
 import {
     insertIntoMongo,
     postgresGetAllBins,
@@ -14,7 +16,8 @@ import {
 
 const app = express();
 app.use(express.json());
-
+const server = createServer(app);
+const wss = new WebSocketServer( { server })
 
 
 app.get('/', (req: Request, res: Response) => {
