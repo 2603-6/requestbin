@@ -6,8 +6,10 @@ import {
     postgresGetAllRequests,
     postgresCreateBin,
     postgresDeleteBin,
+    postgresDeleteRequest,
     postgresInsertRequest,
     mongoFindAllRequestById,
+    mongoDeleteRequest,
     mongoDeleteRequestsFromBin,
     postgresDeleteAllRequestsFromBin,
 } from './utils/database_queries';
@@ -41,7 +43,7 @@ app.get('/api/bins', async (req: Request, res: Response) => {
     try {
         const result = await postgresGetAllBins();
 
-        res.json({bin_names: result})
+        res.json({ bin_names: result })
     } catch (error) {
         console.error("Error fetching bins:", error);
         res.status(500).json({
@@ -77,7 +79,7 @@ app.delete('/api/bins/:binName/requests', async (req: Request, res: Response) =>
         const binName = req.params.binName as string;
         const pgRequests = await postgresGetAllRequests(binName);
         const mongoIDs = pgRequests.map((request) => request.mongodb_id);
-    
+
         await mongoDeleteRequestsFromBin(mongoIDs)
         await postgresDeleteAllRequestsFromBin(binName)
         res.status(204).send()
@@ -133,6 +135,24 @@ app.get('/api/bins/:binName/requests', async (req: Request, res: Response) => {
         res.status(500).json({
             error: "server error",
             msg: "Could not retrieve requests at this time."
+        })
+    }
+})
+
+app.delete('/api/bins/:binName/requests/:requestId', async (req: Request, res: Response) => {
+    try {
+        const binName = req.params.binName as string;
+        const requestId = Number(req.params.requestId)
+
+        const mongodb_id = await postgresDeleteRequest(requestId, binName);
+        await mongoDeleteRequest(mongodb_id);
+
+        res.status(204).send()
+    } catch (error) {
+        console.error("Error deleting request:", error);
+        res.status(400).json({
+            error: "server error",
+            msg: "Could not delete request at this time."
         })
     }
 })
