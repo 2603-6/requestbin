@@ -17,7 +17,7 @@ import {
 const app = express();
 app.use(express.json());
 const server = createServer(app);
-const wss = new WebSocketServer( { server })
+const wss = new WebSocketServer( { server, path: '/ws' })
 
 const binSubscribers = new Map<string, Set<WebSocket>>();
 
