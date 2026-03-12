@@ -25,9 +25,7 @@ export interface RawRequest {
   query_params: object;
 }
 
-export interface RawBin {
-  bin_name: string;
-}
+export type RawBin = string;
 
 export type BinInfo = {
   binName: string;

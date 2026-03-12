@@ -13,8 +13,10 @@ import {
     mongoDeleteRequestsFromBin,
     postgresDeleteAllRequestsFromBin,
 } from './utils/database_queries';
+import cors from 'cors';
 
 const app = express();
+app.use(cors({origin: 'http://localhost:5174'}));
 app.use(express.json());
 
 

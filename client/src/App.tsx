@@ -4,6 +4,7 @@ import { useBinService } from './contexts/binServiceContext.ts';
 import { useEffect, useState } from 'react';
 import { BinContext } from './contexts/binContext.ts';
 import Navbar from './components/Navbar.tsx';
+import BinForm from './components/BinForm.tsx';
 
 
 function App() {
@@ -28,6 +29,17 @@ function App() {
   };
 
   const isSelected = (bin: BinInfo): boolean => bin.binName === selectedBin?.binName;
+  
+  const onCreateBin = (bin: BinInfo) => {
+    binService.createBin(bin.binName).then(
+      (data) => {
+        console.log(data);
+        setBins([...bins, data]);  
+      }).catch((e) => {
+      console.error(e);
+    });
+    
+  };
 
   return (
     <>
@@ -42,7 +54,7 @@ function App() {
             {bin.binName}
           </button>
         ))}
-        {selectedBin ? <Bin /> : null}
+        {selectedBin ? <Bin /> : <BinForm onCreateBin={onCreateBin} />}
       </BinContext>
     </>
   );

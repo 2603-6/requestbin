@@ -2,7 +2,7 @@ import type { BinInfo, IRequestProps, RawBin, RawRequest } from './types';
 
 export const parseRawBin = (raw: RawBin): BinInfo => {
   return {
-    binId: raw.bin_name,
+    binName: raw,
   } as BinInfo;
 };
 
