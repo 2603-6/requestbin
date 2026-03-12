@@ -9,6 +9,7 @@ import {
     postgresInsertRequest,
     mongoFindAllRequestById,
     mongoDeleteRequestsFromBin,
+    postgresDeleteAllRequestsFromBin,
 } from './utils/database_queries';
 
 const app = express();
@@ -71,9 +72,24 @@ app.delete('/api/bins/:binName', async (req: Request, res: Response) => {
 })
 
 //delete requests in a bin
-app.delete('api/bins/:binName/requests'), async (req: Request, res: Response) => {
+app.delete('api/bins/:binName/requests', async (req: Request, res: Response) => {
+    try {
+        const binName = req.params.binName as string;
+        const pgRequests = await postgresGetAllRequests(binName);
+        const mongoIDs = pgRequests.map((request) => request.mongodb_id);
 
-}
+        await mongoDeleteRequestsFromBin(mongoIDs)
+        await postgresDeleteAllRequestsFromBin(binName)
+        res.status(204).send()
+    } catch (error) {
+        console.error("Error deleting requests:", error);
+        res.status(500).json({
+            error: "server error",
+            msg: "Could not delete requests at this time."
+        });
+
+    }
+});
 
 // get all requests for a given bin
 app.get('/api/bins/:binName/requests', async (req: Request, res: Response) => {
