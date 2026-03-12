@@ -40,7 +40,7 @@ app.get('/api/bins', async (req: Request, res: Response) => {
     try {
         const result = await postgresGetAllBins();
         console.log("Bins retrieved: ", result);
-        res.json({ binName: result });
+        res.json({bin_names: result})
     } catch (error) {
         console.error("Error fetching bins:", error);
         res.status(500).json({
