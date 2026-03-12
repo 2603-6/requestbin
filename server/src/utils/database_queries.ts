@@ -27,6 +27,24 @@ export const insertIntoMongo = async (request_payload: unknown) => {
     })
 }
 
+export const mongoDeleteRequestsFromBin = async (ids: string[]): Promise<void> => {
+    const validIds = ids.filter(id => mongoose.Types.ObjectId.isValid(id));
+    const objectIds = validIds.map((id) => new mongoose.Types.ObjectId(id));
+    
+    await mongoCollection().deleteMany({
+        _id: { $in: objectIds}
+});
+}
+
+export const mongoDeleteRequest = async (id: string): Promise<void> => {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new Error(`Invalid MongoDB ID: ${id}`);
+    }
+    await mongoCollection().deleteOne({
+        _id: new mongoose.Types.ObjectId(id)
+    });
+}
+
 //postgres queries
 
 export const postgresGetAllBins = async () => {
@@ -75,6 +93,27 @@ export const postgresDeleteBin = async (binName: string) => {
     );
     return result.rows[0]
 }
+
+export const postgresDeleteRequest = async (id: number) => {
+    const result = await postgresPool.query(
+        `DELETE FROM requests WHERE id = $1 RETURNING *`,
+        [id]
+    );
+    if (!result.rows[0]) {
+        throw new Error(`Request ${id} does not exist`);
+    }
+    return result.rows[0];
+}
+
+export const postgresDeleteAllRequestsFromBin = async (binName: string) => {
+    const result = await postgresPool.query(`
+        DELETE FROM requests
+        WHERE bin_id = (SELECT id FROM bins WHERE name = $1)`,
+        [binName]
+    );
+    return result.rows;
+}
+
 
 export const postgresInsertRequest = async (binName: string, mongodbID: string, httpMethod: string) => {
     let singleBin = await postgresGetSingleBin(binName)
