@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import dotenv from 'dotenv';
 import { mongoDBConnect } from "./utils/database_connections"
 import {
     insertIntoMongo,
@@ -9,11 +8,12 @@ import {
     postgresDeleteBin,
     postgresInsertRequest,
     mongoFindAllRequestById,
+    mongoDeleteRequestsFromBin,
 } from './utils/database_queries';
 
 const app = express();
 app.use(express.json());
-dotenv.config();
+
 
 
 app.get('/', (req: Request, res: Response) => {
@@ -54,14 +54,19 @@ app.get('/api/bins', async (req: Request, res: Response) => {
 app.delete('/api/bins/:binName', async (req: Request, res: Response) => {
     try {
         const binName = req.params.binName as string;
-        const result = await postgresDeleteBin(binName)
-        res.json({ msg: 'it works?' })
+        console.log(binName)
+        const pgRequests = await postgresGetAllRequests(binName);
+        const mongoIDs = pgRequests.map((request) => request.mongodb_id);
+
+        await mongoDeleteRequestsFromBin(mongoIDs)
+        await postgresDeleteBin(binName)
+        res.status(204).send()
     } catch (error) {
         console.error("Error deleting bin:", error);
         res.status(500).json({
             error: "server error",
             msg: "Could not delete bin at this time."
-        })
+        });
 
     }
 })

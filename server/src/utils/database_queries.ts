@@ -27,6 +27,15 @@ export const insertIntoMongo = async (request_payload: unknown) => {
     })
 }
 
+export const mongoDeleteRequestsFromBin = async (ids: string[]): Promise<void> => {
+    const validIds = ids.filter(id => mongoose.Types.ObjectId.isValid(id));
+    const objectIds = validIds.map((id) => new mongoose.Types.ObjectId(id));
+    
+    await mongoCollection().deleteMany({
+        _id: { $in: objectIds}
+});
+}
+
 //postgres queries
 
 export const postgresGetAllBins = async () => {
