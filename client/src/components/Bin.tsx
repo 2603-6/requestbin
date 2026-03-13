@@ -69,7 +69,7 @@ const Bin: FC = () => {
       const data = lastJsonMessage as WebSocketData;
       console.log('lastJsonMessage is', data);
       if (data === null || 'event' in data) return;
-      setRequests((prev) => [...prev, parseRawRequest(data)]);
+      setRequests((prev) => [parseRawRequest(data), ...prev]);
     };
     
     addRequest();
@@ -86,7 +86,7 @@ const Bin: FC = () => {
 
     if (bin) {
       fetchRequests(bin.binName).then(( data ) => {
-        setRequests(data);
+        setRequests([...data].reverse());
       }).catch((e) => {
         console.error(e);
       });

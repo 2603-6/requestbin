@@ -18,10 +18,15 @@ import {
 import cors from 'cors';
 
 const app = express();
-app.use(cors({origin: 'http://localhost:5174'}));
+
+app.use(cors({ origin: (origin, callback) => { const allowed = !origin || ['http://localhost:3000', 'https://forkless-tamesha-unphlegmatically.ngrok-free.dev/'].includes(origin); callback(null, allowed ? origin : false); } }));
+
+
+// app.use(cors({ origin: 'https://forkless-tamesha-unphlegmatically.ngrok-free.dev/' }));
 app.use(express.json());
+app.use(express.static('dist'));
 const server = createServer(app);
-const wss = new WebSocketServer( { server, path: '/ws' })
+const wss = new WebSocketServer({ server, path: '/ws' })
 
 const binSubscribers = new Map<string, Set<WebSocket>>();
 
@@ -36,15 +41,15 @@ wss.on('connection', (ws) => {
             subscribedBin = binName;
             if (!binSubscribers.has(binName)) {
                 binSubscribers.set(binName, new Set());
-        }
+            }
             //ensures add is not null or undefined with !
             binSubscribers.get(binName)!.add(ws);
-            ws.send(JSON.stringify({ event: 'subscribed', binName}))
-        } catch (error){
+            ws.send(JSON.stringify({ event: 'subscribed', binName }))
+        } catch (error) {
             console.error('WebSocket message error:', error);
             ws.send(JSON.stringify({ event: 'error', msg: 'Invalid message format' }));
         }
-      
+
     });
 
     ws.on('close', () => {
@@ -228,19 +233,19 @@ app.all('/bins/:binName', async (req: Request, res: Response) => {
         const pgRow = await postgresInsertRequest(binName, mongodbID, req.method)
 
         broadcastToBin(binName, {
-        
-            
-                id: pgRow.id,
-                bin_name: pgRow.bin_name,
-                time_of_day: pgRow.time_stamp.toTimeString().split(" ")[0],        // "HH:MM:SS"
-                date_stamp: pgRow.time_stamp.toLocaleDateString("en-GB").replace(/\//g, ":"), // "DD:MM:YYYY"
-                http_method: pgRow.http_method,
-                body: mongoData.body ?? {},
-                headers: mongoData?.headers ?? {},
-                path: mongoData?.path ?? {},
-                query_params: mongoData?.query_params ?? {},
-            
-          
+
+
+            id: pgRow.id,
+            bin_name: pgRow.bin_name,
+            time_of_day: pgRow.time_stamp.toTimeString().split(" ")[0],        // "HH:MM:SS"
+            date_stamp: pgRow.time_stamp.toLocaleDateString("en-GB").replace(/\//g, ":"), // "DD:MM:YYYY"
+            http_method: pgRow.http_method,
+            body: mongoData.body ?? {},
+            headers: mongoData?.headers ?? {},
+            path: mongoData?.path ?? {},
+            query_params: mongoData?.query_params ?? {},
+
+
         });
         res.status(202).send();
     } catch (error) {
