@@ -4,6 +4,8 @@ import type { INavbarProps } from '../types';
 
 const Navbar: FC<INavbarProps> = ({ onClearBin, onDeleteBin }) => {
 
+  console.log('onclearbin: ', onDeleteBin);
+
   return (
     <div className="navbar">
       <div className="navbar-title">
@@ -17,7 +19,7 @@ const Navbar: FC<INavbarProps> = ({ onClearBin, onDeleteBin }) => {
           </button>
         }
 
-        {onDeleteBin &&
+        { onDeleteBin &&
           <button onClick={() => void onDeleteBin()}>
             Delete Bin
           </button>

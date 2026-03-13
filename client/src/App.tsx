@@ -82,16 +82,31 @@ function App() {
       {toast && <Toast {...toast}/> }
       <ToastContext value={showMessage}>
         <BinContext value={selectedBin}>
-          <Navbar onClearBin={handleClearBin} onDeleteBin={handleDeleteBin} />
-          {bins.map((bin) => (
-            <button
-              key={bin.binName}
-              onClick={() => toggleSelectedBin(bin)}
-              style={{ backgroundColor: isSelected(bin) ? 'green' : '' }}
-            >
-              {bin.binName}
-            </button>
-          ))}
+          {selectedBin ? <Navbar onClearBin={handleClearBin} onDeleteBin={handleDeleteBin}/> : <Navbar/>}
+          <section className="bin-selector">
+            <div className="bin-selector-header">
+              <h2>Your bins</h2>
+              <p>Select a bin to inspect requests, or click it again to close it.</p>
+            </div>
+
+            {bins.length === 0 ? (
+              <p className="bin-selector-empty">No bins yet. Create your first one below.</p>
+            ) : (
+              <div className="bin-selector-list">
+                {bins.map((bin) => (
+                  <button
+                    key={bin.binName}
+                    type="button"
+                    className={`bin-selector-button ${isSelected(bin) ? 'is-selected' : ''}`}
+                    onClick={() => toggleSelectedBin(bin)}
+                  >
+                    {bin.binName}
+                  </button>
+                ))}
+              </div>
+            )}
+          </section>
+
           {selectedBin ? <Bin /> : <BinForm onCreateBin={onCreateBin} />}
         </BinContext>
       </ToastContext>

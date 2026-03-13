@@ -27,19 +27,27 @@ const BinForm = ({ onCreateBin }: TodoFormProps) => {
   };
 
   return (
-    <form action="#" method="POST" onSubmit={handleSubmit}>
-      <label htmlFor="binName">Bin Name</label>
-      <input
-        type="text"
-        name="binName"
-        id="binName"
-        value={formState.binName}
-        onChange={handleInputChange}
-        placeholder="Enter bin name"
-        required
-      />
-      <input type="submit" value="Create" />
-    </form>
+    <div className="bin-form-card">
+      <div className="bin-form-header">
+        <h2>Create a new bin</h2>
+        <p>Choose a short, memorable name for collecting requests.</p>
+      </div>
+
+      <form className="bin-form" action="#" method="POST" onSubmit={handleSubmit}>
+        <label htmlFor="binName" className="bin-form-label">Bin Name</label>
+        <input
+          type="text"
+          name="binName"
+          id="binName"
+          className="bin-form-input"
+          value={formState.binName}
+          onChange={handleInputChange}
+          placeholder="Enter bin name"
+          required
+        />
+        <input className="bin-form-submit" type="submit" value="Create" />
+      </form>
+    </div>
   );
 };
 
