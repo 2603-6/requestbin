@@ -4,7 +4,7 @@ import { parseRawBin, parseRawRequest } from '../utils.ts';
 
 const BASE_URL = 'https://forkless-tamesha-unphlegmatically.ngrok-free.dev';
 const BINS_URL = BASE_URL + '/api/bins';
-const WS_URL = 'ws://forkless-tamesha-unphlegmatically.ngrok-free.dev/ws';
+const WS_URL = 'wss://forkless-tamesha-unphlegmatically.ngrok-free.dev/ws';
 
 const fetchRequests = async (binName: string) => {
   console.log(`fetching requests for bin ${binName}`);

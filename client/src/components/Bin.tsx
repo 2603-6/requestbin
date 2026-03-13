@@ -20,8 +20,6 @@ const binStyle: CSSProperties = {
 
 };
 
-const BIN_BASE_URL = 'http://localhost:3000/bins';
-
 
 const Bin: FC = () => {
   const [requests, setRequests] = useState<IRequestProps[]>([]);
@@ -32,10 +30,9 @@ const Bin: FC = () => {
 
 
   // Web Socket Implementation
-  const socketURL: string = binService.wsUrl;
 
-  const binUrl = `${BIN_BASE_URL}/${bin.binName}`;
-  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(socketURL, {
+  const binUrl = `${binService.url}/bins/${bin.binName}`;
+  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(binService.wsUrl, {
     share: false,
     shouldReconnect: () => true,
   });
