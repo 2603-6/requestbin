@@ -22,7 +22,6 @@ const createBin = async (binName?: string) => {
 const fetchBins = async () => {
   console.log('fetching bins');
   const response = await axios.get<{ bin_names: RawBin[] }>(BINS_URL);
-  console.log(response.data);
   return response.data.bin_names.map(parseRawBin);
 };
 
@@ -36,7 +35,6 @@ const clearBin = async (binName: string) => {
   console.log(`deleting all requests in ${binName}`);
   await axios.delete(BINS_URL + `/${binName}/requests`);
 };
-
 
 const binService: BinProvider = {
   fetchRequests,
