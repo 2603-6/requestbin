@@ -3,8 +3,11 @@ import type { FC } from 'react';
 import type { IRequestProps } from '../types';
 import { useBinService } from '../contexts/binServiceContext.ts';
 import { useBin } from '../contexts/binContext.ts';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 import Request from './Request.tsx';
 import { FaRegClipboard } from 'react-icons/fa6';
+import { parseRawRequest } from '../utils.ts';
+import type { RawRequest } from '../types';
 
 const clipboardStyle: CSSProperties = {
   backgroundColor: '#1a1a1a',
@@ -34,6 +37,37 @@ const Bin: FC = () => {
   // TODO: Fix this link
   const link: string = `http://localhost:3000/bins/${bin.binName}`;
 
+  // Web Socket Implementation
+  // TODO: Fix this link
+  const socketURL: string = 'ws://localhost:3000/ws';
+
+  const {
+    sendJsonMessage,
+    lastJsonMessage,
+    readyState,
+  } = useWebSocket(socketURL, {
+    share: false,
+    shouldReconnect: () => true,
+  });
+
+  useEffect(() => {
+    console.log('websocket connection changed to', readyState);
+    if (readyState === ReadyState.OPEN) {
+      sendJsonMessage({ binName: bin.binName });
+    }
+  }, [readyState, bin.binName, sendJsonMessage]);
+
+  useEffect(() => {
+    const addRequest = () => {
+      const data = lastJsonMessage as RawRequest;
+      console.log('lastJsonMessage is', data);
+      if (!data) return;
+      setRequests((prev) => [...prev, parseRawRequest(data)]);
+    };
+    
+    addRequest();
+  }, [lastJsonMessage]);
+
   const copyLink = async (): Promise<void> => {
     await navigator.clipboard.writeText(link);
   };
@@ -53,7 +87,6 @@ const Bin: FC = () => {
 
   }, [bin, bin?.binName, binService]);
 
-  // add formatting to date to convert from epoch time to formatted date
   return (
     <div style={binStyle}>
       <h1>Bin: {bin.binName}</h1>
