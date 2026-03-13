@@ -10,6 +10,7 @@ export const Toaster: FC<IToastProps> = ({ messages }) => {
     gap: '1vh',
     position: 'fixed',
     left: '50%',
+    marginTop: '1rem',
     transform: 'translateX(-50%)',
   };
 
