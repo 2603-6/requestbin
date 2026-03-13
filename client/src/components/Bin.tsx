@@ -34,6 +34,9 @@ const binStyle: CSSProperties = {
 
 };
 
+const PUBLIC_BASE_URL = 'https://forkless-tamesha-unphlegmatically.ngrok-free.dev';
+const PUBLIC_WS_URL = 'wss://forkless-tamesha-unphlegmatically.ngrok-free.dev/ws';
+
 const Bin: FC = () => {
   const [requests, setRequests] = useState<IRequestProps[]>([]);
   const binService = useBinService();
@@ -41,12 +44,10 @@ const Bin: FC = () => {
 
   if (!bin) throw new Error('Cannot render without a bin!');
 
-  // TODO: Fix this link
-  const link: string = `http://localhost:3000/bins/${bin.binName}`;
+  const link: string = `${PUBLIC_BASE_URL}/bins/${bin.binName}`;
 
   // Web Socket Implementation
-  // TODO: Fix this link
-  const socketURL: string = 'ws://localhost:3000/ws';
+  const socketURL: string = PUBLIC_WS_URL;
 
   const {
     sendJsonMessage,
