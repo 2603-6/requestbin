@@ -58,14 +58,6 @@ const Bin: FC = () => {
   }, [readyState, bin.binName, sendJsonMessage]);
 
   useEffect(() => {
-    console.log('new request received');
-
-    // lastJsonMessage is a JSON.parsed object from the lastMessage. If it's
-    // not a valid JSON string, it will be an empty object. If lastMessage is
-    // null, it will be null
-
-    console.log('lastJsonMessage is', lastJsonMessage);
-
     const addRequest = () => {
       const data = lastJsonMessage as RawRequest;
       console.log('lastJsonMessage is', data);
@@ -95,7 +87,6 @@ const Bin: FC = () => {
 
   }, [bin, bin?.binName, binService]);
 
-  // add formatting to date to convert from epoch time to formatted date
   return (
     <div style={binStyle}>
       <h1>Bin: {bin.binName}</h1>
