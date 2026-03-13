@@ -1,6 +1,5 @@
 export type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH' | 'CONNECT' | 'HEAD' | 'TRACE' ;
 
-
 export interface IRequestProps {
   requestId: number;
   requestHeaders: string;
@@ -10,8 +9,6 @@ export interface IRequestProps {
   path: string;
   type: RequestMethod;
 }
-
-
 
 export interface RawRequest {
   id: number;

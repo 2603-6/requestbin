@@ -19,7 +19,6 @@ const createBin = async (binName?: string) => {
 };
 
 const fetchBins = async () => {
-  // The real route is /api/bins
   console.log('fetching bins');
   const response = await axios.get<{ bin_names: RawBin[] }>(BINS_URL);
   console.log(response.data);
@@ -28,17 +27,9 @@ const fetchBins = async () => {
 
 
 const deleteBin = async (binName: string) => {
-  // The real route is /api/bins/:name
   console.log(`deleting bin ${binName}`);
   await axios.delete(BINS_URL + `/${binName}`);
 };
-
-// NOT IN MVP
-// const deleteRequest = async (binName: string, requestId: number) => {
-//   // The real route is ...
-//   console.log(`deleting request ${requestId} from bin ${binName}`);
-//   return await axios.delete(BASE_URL + '/requests', { data: { id: requestId } });
-// };
 
 const clearBin = async (binName: string) => {
   console.log(`deleting all requests in ${binName}`);
@@ -52,7 +43,6 @@ const binService: BinProvider = {
   createBin,
   deleteBin,
   clearBin,
-  // deleteRequest,
 };
 
 export default binService;
