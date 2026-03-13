@@ -1,5 +1,5 @@
 import Bin from './components/Bin.tsx';
-import type { BinInfo, IToastProps } from './types';
+import type { BinInfo, Message } from './types';
 import { useBinService } from './contexts/binServiceContext.ts';
 import { useEffect, useState } from 'react';
 import { BinContext } from './contexts/binContext.ts';
@@ -12,7 +12,7 @@ import { ToastContext } from './contexts/toastContext.ts';
 function App() {
   const [bins, setBins] = useState<BinInfo[]>([]);
   const [selectedBin, setSelectedBin] = useState<BinInfo | null>(null);
-  const [toast, setToast] = useState<IToastProps | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
   const binService = useBinService();
 
   useEffect(() => {
@@ -32,54 +32,54 @@ function App() {
   };
 
   const isSelected = (bin: BinInfo): boolean => bin.binName === selectedBin?.binName;
-  
+
+  const showMessage = (props: Message) => {
+    setMessages((prev) => [...prev, props]);
+    setTimeout(() => {
+      setMessages((prev) => prev.filter((msg) => msg !== props));
+    }, 3000);
+  };
+
   const onCreateBin = (bin: BinInfo) => {
     binService.createBin(bin.binName).then(
       (data) => {
         console.log(data);
-        showMessage({ type: 'success', message: 'Bin created!' });
-        setBins([...bins, data]);  
+        showMessage({ type: 'success', text: 'Bin created!' });
+        setBins((prev) => [...prev, data]);
       }).catch((e) => {
-      showMessage({ type: 'error', message: 'Failed to create bin!' });
+      showMessage({ type: 'error', text: 'Failed to create bin!' });
       console.error(e);
     });
-    
-  };
 
-  const showMessage = (props: IToastProps) => {
-    setToast(props);
-    setTimeout(() => {
-      setToast(null);
-    }, 3000);
   };
 
   const handleClearBin = () => {
     if (!selectedBin) return;
     binService.clearBin(selectedBin.binName).then(() => {
-      showMessage({ type: 'success', message: 'Bin cleared!' });
+      showMessage({ type: 'success', text: 'Bin cleared!' });
       setSelectedBin(null);
     }).catch((e) => {
       console.error(e);
-      showMessage({ type: 'error', message: 'Failed to clear bin!' });
+      showMessage({ type: 'error', text: 'Failed to clear bin!' });
     });
   };
 
   const handleDeleteBin = () => {
     if (!selectedBin) return;
     binService.deleteBin(selectedBin.binName).then(() => {
-      showMessage({ type: 'success', message: 'Bin deleted!' });
+      showMessage({ type: 'success', text: 'Bin deleted!' });
       setBins(bins.filter((bin) => bin.binName !== selectedBin.binName));
       setSelectedBin(null);
     }).catch((e) => {
       console.error(e);
-      showMessage({ type: 'error', message: 'Failed to delete bin!' });
+      showMessage({ type: 'error', text: 'Failed to delete bin!' });
     });
   };
 
 
   return (
     <>
-      {toast && <Toast {...toast}/> }
+      <Toast messages={messages}/>
       <ToastContext value={showMessage}>
         <BinContext value={selectedBin}>
           {selectedBin ? <Navbar onClearBin={handleClearBin} onDeleteBin={handleDeleteBin}/> : <Navbar/>}

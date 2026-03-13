@@ -15,7 +15,7 @@ export const Link: FC<{ binUrl: string }> = ({ binUrl }) => {
 
   const copyLink = async (): Promise<void> => {
     await navigator.clipboard.writeText(binUrl);
-    showMessage({ type: 'info', message: 'link copied!' });
+    showMessage({ type: 'info', text: 'link copied!' });
   };
 
   return (

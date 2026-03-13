@@ -40,9 +40,14 @@ export interface BinProvider {
 }
 
 export interface IToastProps {
-  type: 'info' | 'success' | 'warning' | 'error';
-  message: string;
+  messages: Message[]
 }
+export interface Message {
+  type: ToastType;
+  text: string;
+}
+
+export type ToastType = 'info' | 'success' | 'warning' | 'error';
 
 export interface INavbarProps {
   onClearBin?: () => void;
