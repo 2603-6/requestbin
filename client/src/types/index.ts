@@ -35,4 +35,6 @@ export interface BinProvider {
   deleteBin: (binName: string) => Promise<void>;
   fetchRequests: (binName: string) => Promise<IRequestProps[]>;
   clearBin: (binName: string) => Promise<void>;
+  wsUrl: string;
+  url: string;
 }

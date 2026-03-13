@@ -2,9 +2,9 @@ import axios from 'axios';
 import type { BinProvider, RawBin, RawRequest } from '../types';
 import { parseRawBin, parseRawRequest } from '../utils.ts';
 
-// const BASE_URL = 'http://localhost:3000';
 const BASE_URL = 'https://forkless-tamesha-unphlegmatically.ngrok-free.dev';
 const BINS_URL = BASE_URL + '/api/bins';
+const WS_URL = 'ws://forkless-tamesha-unphlegmatically.ngrok-free.dev/ws';
 
 const fetchRequests = async (binName: string) => {
   console.log(`fetching requests for bin ${binName}`);
@@ -44,6 +44,8 @@ const binService: BinProvider = {
   createBin,
   deleteBin,
   clearBin,
+  wsUrl: WS_URL,
+  url: BASE_URL,
 };
 
 export default binService;

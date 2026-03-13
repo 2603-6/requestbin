@@ -41,12 +41,11 @@ const Bin: FC = () => {
 
   if (!bin) throw new Error('Cannot render without a bin!');
 
-  // TODO: Fix this link
-  const link: string = `http://localhost:3000/bins/${bin.binName}`;
+  const link: string = `${binService.url}/bins/${bin.binName}`;
 
   // Web Socket Implementation
   // TODO: Fix this link
-  const socketURL: string = 'ws://localhost:3000/ws';
+  const socketURL: string = binService.wsUrl;
 
   const {
     sendJsonMessage,
