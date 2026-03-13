@@ -29,6 +29,26 @@ const server = createServer(app);
 const wss = new WebSocketServer({ server, path: '/ws' })
 
 const binSubscribers = new Map<string, Set<WebSocket>>();
+const DISPLAY_TIME_ZONE = process.env.DISPLAY_TIME_ZONE || "America/Los_Angeles";
+
+const formatTimestamp = (timestamp: Date | string) => {
+    const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
+    return {
+        time_of_day: date.toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true,
+            timeZone: DISPLAY_TIME_ZONE,
+        }),
+        date_stamp: date.toLocaleDateString("en-US", {
+            month: "2-digit",
+            day: "2-digit",
+            year: "numeric",
+            timeZone: DISPLAY_TIME_ZONE,
+        }),
+    };
+};
 
 wss.on('connection', (ws) => {
     let subscribedBin: string | null = null;
@@ -167,12 +187,13 @@ app.get('/api/bins/:binName/requests', async (req: Request, res: Response) => {
         // 5. Merge and shape the final response
         const finalResult = pgRequests.map(row => {
             const mongoDoc = mongoMap.get(row.mongodb_id);
+            const { time_of_day, date_stamp } = formatTimestamp(row.time_stamp);
 
             return {
                 id: row.id,
                 bin_name: row.bin_name,
-                time_of_day: row.time_stamp.toTimeString().split(" ")[0],        // "HH:MM:SS"
-                date_stamp: row.time_stamp.toLocaleDateString("en-GB").replace(/\//g, ":"), // "DD:MM:YYYY"
+                time_of_day,
+                date_stamp,
                 http_method: row.http_method,
                 body: mongoDoc?.request?.body ?? {},
                 headers: mongoDoc?.request?.headers ?? {},
@@ -231,14 +252,15 @@ app.all('/bins/:binName', async (req: Request, res: Response) => {
             throw new Error("Bin name is missing in the request parameters");
         }
         const pgRow = await postgresInsertRequest(binName, mongodbID, req.method)
+        const { time_of_day, date_stamp } = formatTimestamp(pgRow.time_stamp);
 
         broadcastToBin(binName, {
 
 
             id: pgRow.id,
             bin_name: pgRow.bin_name,
-            time_of_day: pgRow.time_stamp.toTimeString().split(" ")[0],        // "HH:MM:SS"
-            date_stamp: pgRow.time_stamp.toLocaleDateString("en-GB").replace(/\//g, ":"), // "DD:MM:YYYY"
+            time_of_day,
+            date_stamp,
             http_method: pgRow.http_method,
             body: mongoData.body ?? {},
             headers: mongoData?.headers ?? {},

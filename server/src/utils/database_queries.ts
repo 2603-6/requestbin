@@ -129,7 +129,11 @@ export const postgresInsertRequest = async (binName: string, mongodbID: string, 
     const result = await postgresPool.query(
         `INSERT INTO requests (bin_id, mongodb_id, http_method)
         VALUES ((SELECT id from bins where name = $1), $2, $3)
-        RETURNING *`,
+        RETURNING id,
+            (SELECT name FROM bins WHERE name = $1) as bin_name,
+            mongodb_id,
+            time_stamp,
+            http_method`,
         [binName, mongodbID, httpMethod]
     );
     return result.rows[0];
