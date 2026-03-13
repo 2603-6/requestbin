@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import type { BinInfo } from '../types';
 
 interface TodoFormProps {
@@ -12,34 +12,42 @@ interface BinFormState {
 const BinForm = ({ onCreateBin }: TodoFormProps) => {
   const [formState, setFormState] = useState<BinFormState>({ binName: '' });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormState((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const binData = {
       binName: formState.binName,
     };
-
+    setFormState({ binName: '' });
     onCreateBin(binData);
   };
 
   return (
-    <form action="#" method="POST" onSubmit={handleSubmit}>
-      <label htmlFor="binName">Bin Name</label>
-      <input
-        type="text"
-        name="binName"
-        id="binName"
-        value={formState.binName}
-        onChange={handleInputChange}
-        placeholder="Enter bin name"
-        required
-      />
-      <input type="submit" value="Create" />
-    </form>
+    <div className="bin-form-card">
+      <div className="bin-form-header">
+        <h2>Create a new bin</h2>
+        <p>Choose a short, memorable name for collecting requests.</p>
+      </div>
+
+      <form className="bin-form" action="#" method="POST" onSubmit={handleSubmit}>
+        <label htmlFor="binName" className="bin-form-label">Bin Name</label>
+        <input
+          type="text"
+          name="binName"
+          id="binName"
+          className="bin-form-input"
+          value={formState.binName}
+          onChange={handleInputChange}
+          placeholder="Enter bin name"
+          required
+        />
+        <input className="bin-form-submit" type="submit" value="Create" />
+      </form>
+    </div>
   );
 };
 

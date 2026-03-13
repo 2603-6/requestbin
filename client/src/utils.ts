@@ -30,3 +30,7 @@ export const parseRawRequest = (raw: RawRequest): IRequestProps => {
     type: raw.http_method,
   };
 };
+
+export const isRawRequest = (obj: unknown): obj is RawRequest => {
+  return obj !== null && typeof obj === 'object' && 'id' in obj;
+};

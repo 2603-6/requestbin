@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { IRequestProps } from '../types/index.ts';
+import type { IRequestProps } from '../types';
 import { useState } from 'react';
 
 const Row: FC<{ title: string; text: string; }> = ({ title, text }) => {

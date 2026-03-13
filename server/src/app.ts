@@ -19,8 +19,13 @@ import cors from 'cors';
 
 const app = express();
 
-app.use(cors({ origin: (origin, callback) => { const allowed = !origin || ['http://localhost:3000', 'https://forkless-tamesha-unphlegmatically.ngrok-free.dev/'].includes(origin); callback(null, allowed ? origin : false); } }));
+// app.use(cors({
+//     origin: (origin, callback) => {
+//         const allowed = !origin || ['http://localhost:3000', 'https://forkless-tamesha-unphlegmatically.ngrok-free.dev/', 'http://localhost:5174'].includes(origin);
+//         callback(null, allowed ? origin : false);
+//     } }));
 
+app.use(cors({ origin: true }));
 
 // app.use(cors({ origin: 'https://forkless-tamesha-unphlegmatically.ngrok-free.dev/' }));
 app.use(express.json());

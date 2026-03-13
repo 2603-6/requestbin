@@ -1,20 +1,10 @@
 import { type FC } from 'react';
-import { useBin } from '../contexts/binContext.ts';
-import { useBinService } from '../contexts/binServiceContext.ts';
 
-const Navbar: FC = () => {
-  const selectedBin = useBin();
-  const binService = useBinService();
+import type { INavbarProps } from '../types';
 
-  const handleClearBin = async () => {
-    if (!selectedBin) return;
-    await binService.clearBin(selectedBin.binName);
-  };
+const Navbar: FC<INavbarProps> = ({ onClearBin, onDeleteBin }) => {
 
-  const handleDeleteBin = async () => {
-    if (!selectedBin) return;
-    await binService.deleteBin(selectedBin.binName);
-  };
+  console.log('onclearbin: ', onDeleteBin);
 
   return (
     <div className="navbar">
@@ -22,16 +12,18 @@ const Navbar: FC = () => {
         <p>Request Bins</p>
       </div>
       <div className="navbar-controls">
-        {selectedBin && (
-          <>
-            <button onClick={() => void handleClearBin()}>
-              Clear Bin
-            </button>
-            <button onClick={() => void handleDeleteBin()}>
-              Delete Bin
-            </button>
-          </>
-        )}
+
+        { onClearBin &&
+          <button onClick={() => void onClearBin()}>
+            Clear Bin
+          </button>
+        }
+
+        { onDeleteBin &&
+          <button onClick={() => void onDeleteBin()}>
+            Delete Bin
+          </button>
+        }
       </div>
     </div>
   );

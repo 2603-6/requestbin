@@ -35,4 +35,21 @@ export interface BinProvider {
   deleteBin: (binName: string) => Promise<void>;
   fetchRequests: (binName: string) => Promise<IRequestProps[]>;
   clearBin: (binName: string) => Promise<void>;
+  wsUrl: string;
+  url: string;
+}
+
+export interface IToastProps {
+  messages: Message[]
+}
+export interface Message {
+  type: ToastType;
+  text: string;
+}
+
+export type ToastType = 'info' | 'success' | 'warning' | 'error';
+
+export interface INavbarProps {
+  onClearBin?: () => void;
+  onDeleteBin?: () => void;
 }
