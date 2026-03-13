@@ -57,7 +57,6 @@ wss.on('connection', (ws) => {
 //send data to all clients watching a specific bin
 const broadcastToBin = (binName: string, data: object) => {
     const subscribers = binSubscribers.get(binName)
-    console.log('binsubscribers', binSubscribers)
     if (!subscribers) return;
     const payload = JSON.stringify(data);
     subscribers.forEach((client) => {
@@ -243,7 +242,6 @@ app.all('/bins/:binName', async (req: Request, res: Response) => {
             
           
         });
-        console.log('Broadcast sent to bin', binName)
         res.status(202).send();
     } catch (error) {
         console.error("Error: ", error);
