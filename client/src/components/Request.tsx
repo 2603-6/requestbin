@@ -14,7 +14,7 @@ const Row: FC<{ title: string; text: string; }> = ({ title, text }) => {
 };
 
 const Request: FC<IRequestProps> = ({
-  path, // includes query param in string
+  path,
   type,
   timestamp,
   requestHeaders,
