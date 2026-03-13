@@ -59,8 +59,7 @@ const broadcastToBin = (binName: string, data: object) => {
     const subscribers = binSubscribers.get(binName)
     console.log('binsubscribers', binSubscribers)
     if (!subscribers) return;
-    const binWrap = {[binName]: data }
-    const payload = JSON.stringify(binWrap);
+    const payload = JSON.stringify(data);
     subscribers.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(payload)
