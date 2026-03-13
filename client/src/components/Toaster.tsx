@@ -3,7 +3,7 @@ import type { IconType } from 'react-icons';
 import { FaCheckCircle, FaExclamationCircle, FaExclamationTriangle, FaInfoCircle } from 'react-icons/fa';
 import type { IToastProps, ToastType } from '../types';
 
-export const Toast: FC<IToastProps> = ({ messages }) => {
+export const Toaster: FC<IToastProps> = ({ messages }) => {
 
   const toastContainerStyle: CSSProperties = {
     display: 'grid',

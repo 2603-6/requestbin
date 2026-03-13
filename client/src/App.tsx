@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { BinContext } from './contexts/binContext.ts';
 import Navbar from './components/Navbar.tsx';
 import BinForm from './components/BinForm.tsx';
-import { Toast } from './components/Toast.tsx';
+import { Toaster } from './components/Toaster.tsx';
 import { ToastContext } from './contexts/toastContext.ts';
 
 
@@ -79,7 +79,7 @@ function App() {
 
   return (
     <>
-      <Toast messages={messages}/>
+      <Toaster messages={messages}/>
       <ToastContext value={showMessage}>
         <BinContext value={selectedBin}>
           {selectedBin ? <Navbar onClearBin={handleClearBin} onDeleteBin={handleDeleteBin}/> : <Navbar/>}
