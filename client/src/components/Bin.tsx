@@ -9,6 +9,13 @@ import { FaRegClipboard } from 'react-icons/fa6';
 import { parseRawRequest } from '../utils.ts';
 import type { RawRequest } from '../types';
 
+interface WebSocketSubscription {
+  event: string;
+  binName: string;
+}
+
+type WebSocketData = RawRequest | WebSocketSubscription | null;
+
 const clipboardStyle: CSSProperties = {
   backgroundColor: '#1a1a1a',
   border: 'none',
@@ -59,9 +66,9 @@ const Bin: FC = () => {
 
   useEffect(() => {
     const addRequest = () => {
-      const data = lastJsonMessage as RawRequest;
+      const data = lastJsonMessage as WebSocketData;
       console.log('lastJsonMessage is', data);
-      if (!data) return;
+      if (data === null || 'event' in data) return;
       setRequests((prev) => [...prev, parseRawRequest(data)]);
     };
     
