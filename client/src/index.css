@@ -29,11 +29,41 @@ a:hover {
 
 .request-card {
   display: flex;
-  align-items: center;
   flex-direction: column;
+  align-items: stretch;
+  gap: 0.75rem;
   border-radius: 16px;
   background-color: #1e1e1e;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  padding: 1rem;
+}
+
+.request-card p {
+  margin: 0;
+}
+
+.request-path,
+.request-row-content {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-x: auto;
+  background-color: #141414;
+  border-radius: 8px;
+  padding: 0.75rem;
+}
+
+.request-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.request-row-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .navbar {
