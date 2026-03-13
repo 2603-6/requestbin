@@ -214,7 +214,7 @@ app.delete('/api/bins/:binName/requests/:requestId', async (req: Request, res: R
 })
 
 // webhook endpoint
-app.all('/bins/:binName', async (req: Request, res: Response) => {
+app.use('/bins/:binName', async (req: Request, res: Response) => {
     try {
         const mongoData = {
 
