@@ -50,7 +50,7 @@ const Bin: FC = () => {
       const data = lastJsonMessage;
       console.log('lastJsonMessage is', data);
       if (isRawRequest(data)) {
-        setRequests((prev) => [...prev, parseRawRequest(data)]);
+        setRequests((prev) => [parseRawRequest(data), ...prev ]);
       }
     };
 

@@ -39,6 +39,7 @@ const BinForm = ({ onCreateBin }: TodoFormProps) => {
           type="text"
           name="binName"
           id="binName"
+          autoComplete="off"
           className="bin-form-input"
           value={formState.binName}
           onChange={handleInputChange}
