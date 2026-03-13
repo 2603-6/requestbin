@@ -38,3 +38,13 @@ export interface BinProvider {
   wsUrl: string;
   url: string;
 }
+
+export interface IToastProps {
+  type: 'info' | 'success' | 'warning' | 'error';
+  message: string;
+}
+
+export interface INavbarProps {
+  onClearBin?: () => void;
+  onDeleteBin?: () => void;
+}
