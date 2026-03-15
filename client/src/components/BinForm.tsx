@@ -27,7 +27,7 @@ const BinForm = ({ onCreateBin }: TodoFormProps) => {
   };
 
   return (
-    <div className="bin-form-card">
+    <div className="main-page-card">
       <div className="bin-form-header">
         <h2>Create a new bin</h2>
         <p>Choose a short, memorable name for collecting requests.</p>
@@ -39,6 +39,7 @@ const BinForm = ({ onCreateBin }: TodoFormProps) => {
           type="text"
           name="binName"
           id="binName"
+          autoComplete="off"
           className="bin-form-input"
           value={formState.binName}
           onChange={handleInputChange}

@@ -83,7 +83,7 @@ function App() {
       <ToastContext value={showMessage}>
         <BinContext value={selectedBin}>
           {selectedBin ? <Navbar onClearBin={handleClearBin} onDeleteBin={handleDeleteBin}/> : <Navbar/>}
-          <section className="bin-selector">
+          <section className="main-page-card">
             <div className="bin-selector-header">
               <h2>Your bins</h2>
               <p>Select a bin to inspect requests, or click it again to close it.</p>
