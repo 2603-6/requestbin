@@ -3,8 +3,8 @@ import type { BinProvider, RawBin, RawRequest } from '../types';
 import { parseRawBin, parseRawRequest } from '../utils.ts';
 
 const BASE_URL = 'http://localhost:3000';
-const BINS_URL = BASE_URL + '/api/bins';
-const WS_URL = 'ws://localhost:3000/ws';
+const BINS_URL = '/api/bins';
+const WS_URL = `ws://${window.location.host}/ws`;
 
 const fetchRequests = async (binName: string) => {
   console.log(`fetching requests for bin ${binName}`);
@@ -43,7 +43,7 @@ const binService: BinProvider = {
   deleteBin,
   clearBin,
   wsUrl: WS_URL,
-  url: BASE_URL,
+  url: window.location.origin,
 };
 
 export default binService;

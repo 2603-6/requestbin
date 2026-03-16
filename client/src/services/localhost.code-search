@@ -1,0 +1,34 @@
+# Query: localhost
+# ContextLines: 1
+
+7 results - 4 files
+
+client/src/components/Bin.tsx:
+  44    // TODO: Fix this link
+  45:   const link: string = `${window.location.origin}/bins/${bin.binName}`;
+  46  
+
+  48    // TODO: Fix this link
+  49:   const socketURL: string = `ws://${window.location.host}/ws`;
+  50  
+
+client/src/services/binService.ts:
+  4  
+  5: const BASE_URL = 'http://localhost:3000';
+  6  const BINS_URL = BASE_URL + '/api/bins';
+
+server/.env:
+   1: PGHOST=localhost
+   2  PGPORT=5432
+
+   6  
+   7: MONGO_HOST=localhost
+   8  MONGO_PORT=27017
+
+  11  MONGO_DB=rootDB
+  12: MONGO_CONNECTION_STRING = "mongodb://user:password@localhost:27017/requestsdb?authSource=admin"
+
+server/src/app.ts:
+  20  const app = express();
+  21: app.use(cors({origin: 'http://localhost:5174'}));
+  22  app.use(express.json());
