@@ -37,6 +37,7 @@ export interface BinProvider {
   clearBin: (binName: string) => Promise<void>;
   wsUrl: string;
   url: string;
+  getCollectorUrl: (binName: string) => string;
 }
 
 export interface IToastProps {

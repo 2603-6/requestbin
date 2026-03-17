@@ -31,7 +31,7 @@ const Bin: FC = () => {
 
   // Web Socket Implementation
 
-  const binUrl = `${binService.url}/bins/${bin.binName}`;
+  const binUrl = binService.getCollectorUrl(bin.binName);
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(binService.wsUrl, {
     share: false,
     shouldReconnect: () => true,

@@ -11,6 +11,9 @@ const fetchRequests = async (binName: string) => {
   return response.data.map(parseRawRequest);
 };
 
+const getCollectorUrl = (binName: string) => {
+  return `${window.location.origin}/bins/${binName}`;
+};
 
 const createBin = async (binName?: string) => {
   console.log(`creating bin ${binName}`);
@@ -43,6 +46,7 @@ const binService: BinProvider = {
   clearBin,
   wsUrl: WS_URL,
   url: window.location.origin,
+  getCollectorUrl,
 };
 
 export default binService;
